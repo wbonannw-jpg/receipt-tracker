@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Receipt {
+  id          String   @id @default(uuid())
+  date        String
+  totalAmount Int
+  items       Item[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Item {
+  id        String   @id @default(uuid())
+  receiptId String
+  receipt   Receipt  @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+  name      String
+  price     Int
+  category    String   @default("未分類")
+  subCategory String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Income {
+  id        String   @id @default(uuid())
+  month     String   @unique // Format: YYYY-MM
+  amount    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  subCategories SubCategory[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model SubCategory {
+  id         String   @id @default(uuid())
+  name       String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([name, categoryId])
+}
+
+model RecurringEntry {
+  id          String   @id @default(uuid())
+  name        String
+  amount      Int
+  category    String
+  subCategory String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model RecurringHistory {
+  id        String   @id @default(uuid())
+  month     String   @unique // Format: YYYY-MM
+  createdAt DateTime @default(now())
+}

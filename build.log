@@ -1,0 +1,43 @@
+
+> receipt-tracker@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1730.4ms
+  Running TypeScript ...
+  Collecting page data using 15 workers ...
+Error [PrismaClientInitializationError]: `PrismaClient` needs to be constructed with a non-empty, valid `PrismaClientOptions`:
+
+```
+new PrismaClient({
+  ...
+})
+```
+
+or
+
+```
+constructor() {
+  super({ ... });
+}
+```
+          
+    at module evaluation (C:\Users\mako\Desktop\AI作業\G\家計簿\.next\server\chunks\[root-of-the-server]__c9d53a94._.js:1:1381)
+    at instantiateModule (C:\Users\mako\Desktop\AI作業\G\家計簿\.next\server\chunks\[turbopack]_runtime.js:740:9)
+    at instantiateRuntimeModule (C:\Users\mako\Desktop\AI作業\G\家計簿\.next\server\chunks\[turbopack]_runtime.js:768:12)
+    at getOrInstantiateRuntimeModule (C:\Users\mako\Desktop\AI作業\G\家計簿\.next\server\chunks\[turbopack]_runtime.js:781:12)
+    at Object.m (C:\Users\mako\Desktop\AI作業\G\家計簿\.next\server\chunks\[turbopack]_runtime.js:790:18)
+    at Object.<anonymous> (C:\Users\mako\Desktop\AI作業\G\家計簿\.next\server\app\api\receipts\route.js:5:3) {
+  clientVersion: '7.4.1',
+  errorCode: undefined,
+  retryable: undefined
+}
+
+> Build error occurred
+Error: Failed to collect page data for /api/receipts
+    at ignore-listed frames {
+  type: 'Error'
+}
