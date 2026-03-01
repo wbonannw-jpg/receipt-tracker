@@ -20,7 +20,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 style={{ marginBottom: 0 }}>ダッシュボード</h1>
+          <h1 style={{ marginBottom: 0 }}>ホーム</h1>
           <p className="text-muted">最近の支出状況</p>
         </div>
         <div className="flex gap-2">
