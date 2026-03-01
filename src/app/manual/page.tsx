@@ -100,7 +100,7 @@ function ManualEntryForm() {
     return (
         <div className="slide-up">
             <div className="flex justify-between items-center mb-6">
-                <Link href={`/?date=${date}`} className="btn" style={{ padding: '0.5rem', width: 'auto', background: 'transparent' }}>
+                <Link href={`/?date=${date}`} className="btn" style={{ padding: '0.5rem', width: 'auto', background: 'transparent', color: 'var(--primary)' }}>
                     <ArrowLeft size={24} />
                     <span className="sr-only">戻る</span>
                 </Link>

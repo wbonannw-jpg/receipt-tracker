@@ -233,7 +233,7 @@ export default function SettingsPage() {
     return (
         <div className="slide-up pb-20">
             <div className="flex items-center gap-2 mb-6">
-                <button onClick={() => router.push("/")} className="btn" style={{ padding: '0.5rem', width: 'auto', background: 'transparent' }}>
+                <button onClick={() => router.push("/")} className="btn" style={{ padding: '0.5rem', width: 'auto', background: 'transparent', color: 'var(--primary)' }}>
                     <ArrowLeft size={24} />
                 </button>
                 <h1 style={{ marginBottom: 0, fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

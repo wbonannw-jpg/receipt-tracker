@@ -49,7 +49,7 @@ export default function CameraPage() {
     return (
         <div className="slide-up">
             <div className="flex items-center gap-4 mb-6">
-                <button onClick={() => router.back()} className="btn" style={{ padding: '0.5rem', width: 'auto', background: 'transparent' }}>
+                <button onClick={() => router.back()} className="btn" style={{ padding: '0.5rem', width: 'auto', background: 'transparent', color: 'var(--primary)' }}>
                     <ArrowLeft size={24} />
                 </button>
                 <h1 style={{ marginBottom: 0 }}>レシート読み取り</h1>

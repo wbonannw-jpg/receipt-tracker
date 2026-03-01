@@ -32,11 +32,11 @@ export default function RootLayout({
               🧾 Receipt Tracker
             </Link>
             <nav className="flex gap-4">
-              <Link href="/" className="flex flex-col items-center gap-1 text-sm text-muted slide-up" style={{ textDecoration: 'none' }}>
+              <Link href="/" className="flex flex-col items-center gap-1 text-sm slide-up" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
                 <Home size={20} />
                 <span>ホーム</span>
               </Link>
-              <Link href="/camera" className="flex flex-col items-center gap-1 text-sm text-primary slide-up" style={{ textDecoration: 'none' }}>
+              <Link href="/camera" className="flex flex-col items-center gap-1 text-sm slide-up" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
                 <Camera size={20} />
                 <span>撮影</span>
               </Link>
