@@ -1,0 +1,156 @@
+﻿node.exe : Fetching deployment "receipt-t
+racker-q0l9g5m2b-wbonannw-2169s-projects.
+vercel.app" in wbonannw-2169s-projects
+発生場所 行:1 文字:1
++ & "C:\Program Files\nodejs/node.exe" "C
+:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifi 
+   ed: (Fetching deploy...-2169s-projec  
+  ts:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeComm 
+   andError
+ 
+2026-03-01T13:26:38.374Z  Running build i
+n Portland, USA (West) 窶・pdx1
+2026-03-01T13:26:38.375Z  Build machine c
+onfiguration: 2 cores, 8 GB
+2026-03-01T13:26:38.509Z  Cloning github.
+com/wbonannw-jpg/receipt-tracker (Branch:
+ main, Commit: 4859c37)
+2026-03-01T13:26:38.510Z  Previous build 
+caches not available.
+2026-03-01T13:26:39.130Z  Cloning complet
+ed: 621.000ms
+2026-03-01T13:26:41.451Z  Running "vercel
+ build"
+2026-03-01T13:26:42.151Z  Vercel CLI 50.2
+3.2
+2026-03-01T13:26:42.453Z  Installing depe
+ndencies...
+2026-03-01T13:26:50.563Z  npm warn deprec
+ated node-domexception@1.0.0: Use your pl
+atform's native DOMException instead
+2026-03-01T13:26:50.576Z  npm warn deprec
+ated source-map@0.8.0-beta.0: The work th
+at was done in this beta branch won't be 
+included in future versions
+2026-03-01T13:26:51.480Z  npm warn deprec
+ated glob@10.5.0: Old versions of glob ar
+e not supported, and contain widely publi
+cized security vulnerabilities, which hav
+e been fixed in the current version. Plea
+se update. Support for old versions may b
+e purchased (at exorbitant rates) by cont
+acting i@izs.me
+2026-03-01T13:27:02.113Z  
+2026-03-01T13:27:02.114Z  added 542 packa
+ges in 19s
+2026-03-01T13:27:02.114Z  
+2026-03-01T13:27:02.115Z  171 packages ar
+e looking for funding
+2026-03-01T13:27:02.115Z  run `npm fund` 
+for details
+2026-03-01T13:27:02.195Z  Detected Next.j
+s version: 16.1.6
+2026-03-01T13:27:02.202Z  Running "npm ru
+n build"
+2026-03-01T13:27:02.314Z  
+2026-03-01T13:27:02.314Z  > receipt-track
+er@0.1.0 build
+2026-03-01T13:27:02.315Z  > next build --
+webpack
+2026-03-01T13:27:02.315Z  
+2026-03-01T13:27:03.201Z  Attention: Next
+.js now collects completely anonymous tel
+emetry regarding usage.
+2026-03-01T13:27:03.202Z  This informatio
+n is used to shape Next.js' roadmap and p
+rioritize features.
+2026-03-01T13:27:03.202Z  You can learn m
+ore, including how to opt-out if you'd no
+t like to participate in this anonymous p
+rogram, by visiting the following URL:
+2026-03-01T13:27:03.203Z  https://nextjs.
+org/telemetry
+2026-03-01T13:27:03.203Z  
+2026-03-01T13:27:03.214Z  笆ｲ Next.js 16.1
+.6 (webpack)
+2026-03-01T13:27:03.214Z  
+2026-03-01T13:27:03.224Z  笞 The "middlew
+are" file convention is deprecated. Pleas
+e use "proxy" instead. Learn more: https:
+//nextjs.org/docs/messages/middleware-to-
+proxy
+2026-03-01T13:27:03.250Z  Creating an opt
+imized production build ...
+2026-03-01T13:27:03.368Z  笨・(serwist) Bun
+dling the service worker script with the 
+URL '/sw.js' and the scope '/'...
+2026-03-01T13:27:16.477Z  笨・Compiled succ
+essfully in 13.1s
+2026-03-01T13:27:16.481Z  Running TypeScr
+ipt ...
+2026-03-01T13:27:21.706Z  Collecting page
+ data using 1 worker ...
+2026-03-01T13:27:22.031Z  Prisma has dete
+cted that this project was built on Verce
+l, which caches dependencies. This leads 
+to an outdated Prisma Client because Pris
+ma's auto-generation isn't triggered. To 
+fix this, make sure to run the `prisma ge
+nerate` command during the build process.
+2026-03-01T13:27:22.031Z  
+2026-03-01T13:27:22.033Z  Learn how: http
+s://pris.ly/d/vercel-build
+2026-03-01T13:27:22.035Z  Error [PrismaCl
+ientInitializationError]: Prisma has dete
+cted that this project was built on Verce
+l, which caches dependencies. This leads 
+to an outdated Prisma Client because Pris
+ma's auto-generation isn't triggered. To 
+fix this, make sure to run the `prisma ge
+nerate` command during the build process.
+2026-03-01T13:27:22.037Z  
+2026-03-01T13:27:22.037Z  Learn how: http
+s://pris.ly/d/vercel-build
+2026-03-01T13:27:22.037Z  at 32038 (.next
+/server/app/api/categories/[id]/route.js:
+1:7399)
+2026-03-01T13:27:22.037Z  at g (.next/ser
+ver/webpack-runtime.js:1:136)
+2026-03-01T13:27:22.037Z  at 21808 (.next
+/server/app/api/categories/[id]/route.js:
+1:765)
+2026-03-01T13:27:22.037Z  at g (.next/ser
+ver/webpack-runtime.js:1:136)
+2026-03-01T13:27:22.037Z  at <unknown> (.
+next/server/app/api/categories/[id]/route
+.js:1:7886)
+2026-03-01T13:27:22.037Z  at g.X (.next/s
+erver/webpack-runtime.js:1:1189)
+2026-03-01T13:27:22.038Z  at <unknown> (.
+next/server/app/api/categories/[id]/route
+.js:1:7864)
+2026-03-01T13:27:22.038Z  at Object.<anon
+ymous> (.next/server/app/api/categories/[
+id]/route.js:1:7918) {
+2026-03-01T13:27:22.038Z  clientVersion: 
+'5.22.0',
+2026-03-01T13:27:22.038Z  errorCode: unde
+fined
+2026-03-01T13:27:22.038Z  }
+2026-03-01T13:27:22.541Z  
+2026-03-01T13:27:22.541Z  > Build error o
+ccurred
+2026-03-01T13:27:22.543Z  Error: Failed t
+o collect page data for /api/categories/[
+id]
+2026-03-01T13:27:22.543Z  at ignore-liste
+d frames {
+2026-03-01T13:27:22.550Z  type: 'Error'
+2026-03-01T13:27:22.551Z  }
+2026-03-01T13:27:22.597Z  Error: Command 
+"npm run build" exited with 1
+status	笳・Error

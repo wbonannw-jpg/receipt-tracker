@@ -1,0 +1,106 @@
+﻿node.exe : Fetching deployment "receipt-t
+racker-my8zo5nz1-wbonannw-2169s-projects.
+vercel.app" in wbonannw-2169s-projects
+発生場所 行:1 文字:1
++ & "C:\Program Files\nodejs/node.exe" "C
+:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifie
+    d: (Fetching deploy...-2169s-projects
+    :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeComma
+    ndError
+ 
+2026-02-28T13:07:05.567Z  Running build i
+n Portland, USA (West) 窶・pdx1
+2026-02-28T13:07:05.567Z  Build machine c
+onfiguration: 2 cores, 8 GB
+2026-02-28T13:07:05.733Z  Cloning github.
+com/wbonannw-jpg/receipt-tracker (Branch:
+ main, Commit: ba6b5a4)
+2026-02-28T13:07:05.734Z  Previous build 
+caches not available.
+2026-02-28T13:07:06.613Z  Cloning complet
+ed: 879.000ms
+2026-02-28T13:07:08.185Z  Running "vercel
+ build"
+2026-02-28T13:07:08.796Z  Vercel CLI 50.2
+3.2
+2026-02-28T13:07:09.100Z  Installing depe
+ndencies...
+2026-02-28T13:07:17.160Z  npm warn deprec
+ated node-domexception@1.0.0: Use your pl
+atform's native DOMException instead
+2026-02-28T13:07:17.191Z  npm warn deprec
+ated source-map@0.8.0-beta.0: The work th
+at was done in this beta branch won't be 
+included in future versions
+2026-02-28T13:07:18.163Z  npm warn deprec
+ated glob@10.5.0: Old versions of glob ar
+e not supported, and contain widely publi
+cized security vulnerabilities, which hav
+e been fixed in the current version. Plea
+se update. Support for old versions may b
+e purchased (at exorbitant rates) by cont
+acting i@izs.me
+2026-02-28T13:07:28.987Z  
+2026-02-28T13:07:28.988Z  added 542 packa
+ges in 20s
+2026-02-28T13:07:28.988Z  
+2026-02-28T13:07:28.988Z  171 packages ar
+e looking for funding
+2026-02-28T13:07:28.989Z  run `npm fund` 
+for details
+2026-02-28T13:07:29.065Z  Detected Next.j
+s version: 16.1.6
+2026-02-28T13:07:29.065Z  Running "npm ru
+n build"
+2026-02-28T13:07:29.161Z  
+2026-02-28T13:07:29.161Z  > receipt-track
+er@0.1.0 build
+2026-02-28T13:07:29.161Z  > next build --
+webpack
+2026-02-28T13:07:29.162Z  
+2026-02-28T13:07:30.022Z  Attention: Next
+.js now collects completely anonymous tel
+emetry regarding usage.
+2026-02-28T13:07:30.023Z  This informatio
+n is used to shape Next.js' roadmap and p
+rioritize features.
+2026-02-28T13:07:30.023Z  You can learn m
+ore, including how to opt-out if you'd no
+t like to participate in this anonymous p
+rogram, by visiting the following URL:
+2026-02-28T13:07:30.023Z  https://nextjs.
+org/telemetry
+2026-02-28T13:07:30.024Z  
+2026-02-28T13:07:30.034Z  笆ｲ Next.js 16.1
+.6 (webpack)
+2026-02-28T13:07:30.035Z  
+2026-02-28T13:07:30.038Z  笞 The "middlew
+are" file convention is deprecated. Pleas
+e use "proxy" instead. Learn more: https:
+//nextjs.org/docs/messages/middleware-to-
+proxy
+2026-02-28T13:07:30.070Z  Creating an opt
+imized production build ...
+2026-02-28T13:07:30.186Z  笨・(serwist) Bun
+dling the service worker script with the 
+URL '/sw.js' and the scope '/'...
+2026-02-28T13:07:43.189Z  Failed to compi
+le.
+2026-02-28T13:07:43.190Z  
+2026-02-28T13:07:43.190Z  Module not foun
+d: Error: Can't resolve '/vercel/path0/sr
+c/app/sw.ts' in '/vercel/path0'
+2026-02-28T13:07:43.191Z  
+2026-02-28T13:07:43.191Z  Cannot read pro
+perties of undefined (reading 'source')
+2026-02-28T13:07:43.191Z  
+2026-02-28T13:07:43.694Z  
+2026-02-28T13:07:43.699Z  > Build failed 
+because of webpack errors
+2026-02-28T13:07:43.746Z  Error: Command 
+"npm run build" exited with 1
+status	笳・Error

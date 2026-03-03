@@ -1,0 +1,23 @@
+﻿node.exe : Fetching projects in wbonannw-
+2169s-projects
+発生場所 行:1 文字:1
++ & "C:\Program Files\nodejs/node.exe" "C
+:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifie
+d: (F    etching projec...-2169s-projects
+:String) [    ], RemoteException
+    + FullyQualifiedErrorId : NativeComma
+ndErr    or
+ 
+> Projects found under wbonannw-2169s-pro
+jects  [796ms]
+
+  Project Name      Latest Production URL
+                     Updated   Node Versi
+on   
+  receipt-tracker   https://receipt-track
+er-lime.vercel.app   3m        24.x      
+     
+

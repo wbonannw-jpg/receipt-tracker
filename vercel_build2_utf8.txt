@@ -1,0 +1,132 @@
+﻿node.exe : WARN! Build not running on Ver
+cel. System environment variables will no
+t be available.
+発生場所 行:1 文字:1
++ & "C:\Program Files\nodejs/node.exe" "C
+:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifi 
+   ed: (WARN! Build not...t be availabl  
+  e.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeComm 
+   andError
+ 
+WARNING: You should not upload the `.next
+` directory.
+Installing dependencies...
+
+up to date in 612ms
+
+161 packages are looking for funding
+  run `npm fund` for details
+Detected Next.js version: 16.1.6
+Running "npm run build"
+
+> receipt-tracker@0.1.0 build
+> next build --webpack
+
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+笆ｲ Next.js 16.1.6 (webpack)
+- Environments: .env.local, .env
+
+笞 The "middleware" file convention is de
+precated. Please use "proxy" instead. Lea
+rn more: https://nextjs.org/docs/messages
+/middleware-to-proxy
+  Creating an optimized production build ...
+笨・(serwist) Bundling the service worker script with the URL '/sw.js' and the scope '/'...
+笨・Compiled successfully in 3.6s
+  Running TypeScript ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/11) ...
+  Generating static pages using 15 workers (2/11) 
+  Generating static pages using 15 workers (5/11) 
+笞 Unsupported metadata themeColor is con
+figured in metadata export in /_not-found
+. Please move it to viewport export inste
+ad.
+Read more: https://nextjs.org/docs/app/ap
+i-reference/functions/generate-viewport
+笞 Unsupported metadata themeColor is con
+figured in metadata export in /camera. Pl
+ease move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/ap
+i-reference/functions/generate-viewport
+笞 Unsupported metadata themeColor is con
+figured in metadata export in /camera/res
+ult. Please move it to viewport export in
+stead.
+Read more: https://nextjs.org/docs/app/ap
+i-reference/functions/generate-viewport
+笞 Unsupported metadata themeColor is con
+figured in metadata export in /manual. Pl
+ease move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/ap
+i-reference/functions/generate-viewport
+  Generating static pages using 15 workers (8/11) 
+笞 Unsupported metadata themeColor is con
+figured in metadata export in /settings. 
+Please move it to viewport export instead
+.
+Read more: https://nextjs.org/docs/app/ap
+i-reference/functions/generate-viewport
+笨・Generating static pages using 15 workers (11/11) in 239.3ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+笏・ﾆ・/
+笏・笳・/_not-found
+笏・ﾆ・/api/categories
+笏・ﾆ・/api/categories/[id]
+笏・ﾆ・/api/cron/recurring
+笏・ﾆ・/api/income
+笏・ﾆ・/api/receipts
+笏・ﾆ・/api/receipts/[id]
+笏・ﾆ・/api/recurring
+笏・ﾆ・/api/recurring/[id]
+笏・ﾆ・/api/subcategories
+笏・ﾆ・/api/subcategories/[id]
+笏・ﾆ・/api/upload
+笏・笳・/camera
+笏・笳・/camera/result
+笏・笳・/manual
+笏・ﾆ・/receipts/[id]
+笏・笳・/settings
+
+
+ﾆ・Proxy (Middleware)
+
+笳・ (Static)   prerendered as static content
+ﾆ・ (Dynamic)  server-rendered on demand
+
+Traced Next.js server files in: 274.53ms
+Tracing entries due to missing build traces:
+[
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/_global-error/page.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/_not-found/page.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/camera/result/page.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/receipts/[id]/page.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/camera/page.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/manual/page.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/settings/page.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/categories/[id]/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/income/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/cron/recurring/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/receipts/[id]/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/receipts/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/recurring/[id]/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/subcategories/[id]/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/subcategories/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/upload/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/categories/route.js",
+  "C:/Users/mako/Desktop/AI菴懈･ｭ/G/螳ｶ險育ｰｿ/.next/server/app/api/recurring/route.js"
+]: 1.548s
+Created all serverless functions in: 1.691s
+Error: Unable to find lambda for route: /
+camera/result

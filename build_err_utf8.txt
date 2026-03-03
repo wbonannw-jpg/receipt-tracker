@@ -1,0 +1,37 @@
+
+> receipt-tracker@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local, .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.1s
+  Running TypeScript ...
+
+[@serwist/next] WARNING: You are using '@serwist/next' with `next dev --turbopack`, but it doesn't support Turbopack. Do one of the following:
+
+- Set `disable` to `process.env.NODE_ENV !== "production"`.
+
+- Use webpack by running `next dev --webpack` instead of `next dev --turbopack`.
+
+- Migrate to '@serwist/turbopack' which has experimental support for Turbopack. See https://serwist.pages.dev/docs/next/turbo for more information.
+
+- Migrate to configurator mode which has support for Turbopack. See https://serwist.pages.dev/docs/next/config for more information. 
+
+Follow https://github.com/serwist/serwist/issues/54 for progress on Serwist + Turbopack. You can also suppress this warning by setting SERWIST_SUPPRESS_TURBOPACK_WARNING=1.
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+Failed to compile.
+
+./src/app/sw.ts:11:21
+Type error: Cannot find name 'ServiceWorkerGlobalScope'. Did you mean 'WorkerGlobalScope'?
+
+[0m [90m  9 |[39m }
+ [90m 10 |[39m
+[31m[1m>[22m[39m[90m 11 |[39m declare [36mconst[39m self[33m:[39m [33mServiceWorkerGlobalScope[39m[33m;[39m
+ [90m    |[39m                     [31m[1m^[22m[39m
+ [90m 12 |[39m
+ [90m 13 |[39m [36mconst[39m serwist [33m=[39m [36mnew[39m [33mSerwist[39m({
+ [90m 14 |[39m     precacheEntries[33m:[39m self[33m.[39m__SW_MANIFEST[33m,[39m[0m
+Next.js build worker exited with code: 1 and signal: null

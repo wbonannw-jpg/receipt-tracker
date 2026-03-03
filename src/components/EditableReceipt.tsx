@@ -156,6 +156,11 @@ export default function EditableReceipt({ initialReceipt }: { initialReceipt: Re
                         <h2 style={{ margin: 0, color: 'var(--primary)', fontSize: '2rem' }}>
                             ¥{currentTotal.toLocaleString()}
                         </h2>
+                        {!isEditing && currentTotal !== initialReceipt.totalAmount && (
+                            <p className="text-sm" style={{ color: 'var(--muted)', margin: '0.2rem 0 0 0' }}>
+                                支払合計: ¥{initialReceipt.totalAmount.toLocaleString()}
+                            </p>
+                        )}
                     </div>
                 </div>
 

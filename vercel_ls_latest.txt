@@ -1,0 +1,53 @@
+﻿node.exe : Retrieving project窶ｦ
+発生場所 行:1 文字:1
++ & "C:\Program Files\nodejs/node.exe" "C
+:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifi 
+   ed: (Retrieving project窶ｦ:String) []  
+  , RemoteException
+    + FullyQualifiedErrorId : NativeComm 
+   andError
+ 
+Fetching deployments in wbonannw-2169s-pr
+ojects
+> Deployments for wbonannw-2169s-projects
+/receipt-tracker [170ms]
+
+  Age     Project                        
+             Deployment                  
+                                         
+    Status      Environment     Duration 
+    Username          
+  1d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-my8z
+o5nz1-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      41s      
+    wbonannw-2169     
+  1d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-ab7m
+cpbe6-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      45s      
+    wbonannw-2169     
+  1d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-lups
+znqq6-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      46s      
+    wbonannw-2169     
+https://receipt-tracker-my8zo5nz1-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-ab7mcpbe6-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-lupsznqq6-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-hnwfowgtk-wbonannw-2169s-projects.vercel.app
+  2d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-hnwf
+owgtk-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      44s      
+    wbonannw-2169     
+  2d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-hcb5
+ptqsu-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      31s      
+    wbonannw-2169     
+
+https://receipt-tracker-hcb5ptqsu-wbonannw-2169s-projects.vercel.app

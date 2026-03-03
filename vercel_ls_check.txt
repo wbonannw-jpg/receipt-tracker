@@ -1,0 +1,77 @@
+﻿node.exe : Retrieving project窶ｦ
+発生場所 行:1 文字:1
++ & "C:\Program Files\nodejs/node.exe" "C
+:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifie
+d: (R    etrieving project窶ｦ:String) [], 
+RemoteExce    ption
+    + FullyQualifiedErrorId : NativeComma
+ndErr    or
+ 
+Fetching deployments in wbonannw-2169s-pr
+ojects
+> Deployments for wbonannw-2169s-projects
+/receipt-tracker [180ms]
+
+  Age     Project                        
+             Deployment                  
+                                         
+    Status      Environment     Duration 
+    Username          
+  17m     wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-5jt8
+xgjuo-wbonannw-2169s-projects.vercel.app 
+    笳・Ready     Production      38s      
+    wbonannw-2169     
+  27m     wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-r4d7
+ybjlj-wbonannw-2169s-projects.vercel.app 
+    笳・Ready     Production      38s      
+    wbonannw-2169     
+  48m     wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-bvxr
+odi5t-wbonannw-2169s-projects.vercel.app 
+    笳・Ready     Production      1m       
+    wbonannw-2169     
+  54m     wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-q0l9
+g5m2b-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      47s      
+    wbonannw-2169     
+  1d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-my8z
+o5nz1-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      41s      
+    wbonannw-2169     
+  1d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-ab7m
+cpbe6-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      45s      
+    wbonannw-2169     
+  1d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-lups
+znqq6-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      46s      
+    wbonannw-2169     
+  2d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-hnwf
+owgtk-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      44s      
+    wbonannw-2169     
+  2d      wbonannw-2169s-projects/receipt
+-tracker     https://receipt-tracker-hcb5
+ptqsu-wbonannw-2169s-projects.vercel.app 
+    笳・Error     Production      31s      
+    wbonannw-2169     
+
+https://receipt-tracker-5jt8xgjuo-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-r4d7ybjlj-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-bvxrodi5t-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-q0l9g5m2b-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-my8zo5nz1-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-ab7mcpbe6-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-lupsznqq6-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-hnwfowgtk-wbonannw-2169s-projects.vercel.app
+https://receipt-tracker-hcb5ptqsu-wbonannw-2169s-projects.vercel.app

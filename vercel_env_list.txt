@@ -1,0 +1,21 @@
+﻿node.exe : Retrieving project窶ｦ
+発生場所 行:1 文字:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Prog
+ram Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (R 
+   etrieving project窶ｦ:String) [], RemoteExce  
+  ption
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+> Environment Variables found for wbonannw-2169
+s-projects/receipt-tracker [173ms]
+
+ name                       value               environments                        created    
+ DATABASE_URL               Encrypted           Production, Preview, Development    2d ago     
+ GEMINI_API_KEY             Encrypted           Production, Preview, Development    2d ago     
+ BASIC_AUTH_USER            Encrypted           Production, Preview, Development    2d ago     
+ BASIC_AUTH_PASSWORD        Encrypted           Production, Preview, Development    2d ago     
+

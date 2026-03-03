@@ -1,0 +1,81 @@
+﻿
+> receipt-tracker@0.1.0 build
+> next build
+
+node.exe : [@serwist/next] WARNING: You a
+re using '@serwist/next' with `next dev -
+-turbopack`, but it doesn't support Turbo
+pack. Do one of the following:
+発生場所 行:1 文字:1
++ & "C:\Program Files\nodejs/node.exe" "C
+:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecifi 
+   ed: ([@serwist/next]... the followin  
+  g::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeComm 
+   andError
+ 
+
+- Set `disable` to `process.env.NODE_ENV 
+!== "production"`.
+
+- Use webpack by running `next dev --webp
+ack` instead of `next dev --turbopack`.
+
+- Migrate to '@serwist/turbopack' which h
+as experimental support for Turbopack. Se
+e https://serwist.pages.dev/docs/next/tur
+bo for more information.
+
+- Migrate to configurator mode which has 
+support for Turbopack. See https://serwis
+t.pages.dev/docs/next/config for more inf
+ormation. 
+
+Follow https://github.com/serwist/serwist
+/issues/54 for progress on Serwist + Turb
+opack. You can also suppress this warning
+ by setting SERWIST_SUPPRESS_TURBOPACK_WA
+RNING=1.
+
+笆ｲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local, .env
+
+笞 The "middleware" file convention is de
+precated. Please use "proxy" instead. Lea
+rn more: https://nextjs.org/docs/messages
+/middleware-to-proxy
+  Creating an optimized production build ...
+筧ｯ ERROR: This build is using Turbopack, 
+with a `webpack` config and no `turbopack
+` config.
+   This may be a mistake.
+
+   As of Next.js 16 Turbopack is enabled 
+by default and
+   custom webpack configurations may need
+ to be migrated to Turbopack.
+
+   NOTE: your `webpack` config may have b
+een added by a configuration plugin.
+
+   To configure Turbopack, see https://ne
+xtjs.org/docs/app/api-reference/next-conf
+ig-js/turbopack
+
+   TIP: Many applications work fine under
+ Turbopack with no configuration,
+   if that is the case for you, you can s
+ilence this error by passing the
+   `--turbopack` or `--webpack` flag expl
+icitly or simply setting an 
+   empty turbopack config in your Next co
+nfig file (e.g. `turbopack: {}`).
+
+> Build error occurred
+Error: Call retries were exceeded
+    at ignore-listed frames {
+  type: 'WorkerError'
+}
