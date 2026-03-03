@@ -1,15 +1,20 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const userId = session.user.id;
+
     try {
         const recurringEntries = await prisma.recurringEntry.findMany({
-            orderBy: { createdAt: 'asc' }
+            where: { userId },
+            orderBy: { createdAt: "asc" }
         });
-
         return NextResponse.json(recurringEntries);
     } catch (error) {
         console.error("Error fetching recurring entries:", error);
@@ -18,6 +23,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const userId = session.user.id;
+
     try {
         const body = await req.json();
         const { name, amount, category, subCategory } = body;
@@ -27,17 +36,11 @@ export async function POST(req: Request) {
         }
 
         const newEntry = await prisma.recurringEntry.create({
-            data: {
-                name,
-                amount: Number(amount),
-                category,
-                subCategory: subCategory || null
-            }
+            data: { name, amount: Number(amount), category, subCategory: subCategory || null, userId }
         });
 
         revalidatePath("/settings");
         revalidatePath("/");
-
         return NextResponse.json(newEntry);
     } catch (error) {
         console.error("Error creating recurring entry:", error);

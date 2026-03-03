@@ -1,17 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function GET(req: NextRequest) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const userId = session.user.id;
+
     try {
         const { searchParams } = new URL(req.url);
-        const month = searchParams.get("month"); // Format "YYYY-MM"
+        const month = searchParams.get("month");
 
-        if (!month) {
-            return NextResponse.json({ error: "Missing month parameter" }, { status: 400 });
-        }
+        if (!month) return NextResponse.json({ error: "Missing month parameter" }, { status: 400 });
 
         const income = await prisma.income.findUnique({
-            where: { month }
+            where: { userId_month: { userId, month } }
         });
 
         return NextResponse.json({ income });
@@ -22,6 +25,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const userId = session.user.id;
+
     try {
         const body = await req.json();
         const { month, amount } = body;
@@ -31,9 +38,9 @@ export async function POST(req: NextRequest) {
         }
 
         const income = await prisma.income.upsert({
-            where: { month },
+            where: { userId_month: { userId, month } },
             update: { amount: Number(amount) },
-            create: { month, amount: Number(amount) }
+            create: { userId, month, amount: Number(amount) }
         });
 
         return NextResponse.json({ success: true, income });
@@ -44,18 +51,17 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const userId = session.user.id;
+
     try {
         const { searchParams } = new URL(req.url);
         const month = searchParams.get("month");
 
-        if (!month) {
-            return NextResponse.json({ error: "Missing month parameter" }, { status: 400 });
-        }
+        if (!month) return NextResponse.json({ error: "Missing month parameter" }, { status: 400 });
 
-        await prisma.income.deleteMany({
-            where: { month }
-        });
-
+        await prisma.income.deleteMany({ where: { userId, month } });
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("Delete Income Error:", error);

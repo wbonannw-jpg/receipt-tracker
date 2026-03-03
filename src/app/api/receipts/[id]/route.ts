@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const userId = session.user.id;
+
     try {
         const resolvedParams = await params;
         const id = resolvedParams.id;
@@ -12,7 +17,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
             return NextResponse.json({ error: "必須項目が不足しています" }, { status: 400 });
         }
 
-        // Pre-process items mapping empty names to "未入力"
         const finalItems = items.map((item: any) => ({
             name: item.name.trim() === "" ? "未入力" : item.name.trim(),
             price: Number(item.price),
@@ -20,22 +24,14 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
             subCategory: item.subCategory || null
         }));
 
-        // Use a transaction to ensure atomic update of receipt and its items
         const updatedReceipt = await prisma.$transaction(async (tx) => {
-            // Delete existing items
-            await tx.item.deleteMany({
-                where: { receiptId: id }
-            });
-
-            // Update receipt and recreate items
+            await tx.item.deleteMany({ where: { receiptId: id } });
             return await tx.receipt.update({
-                where: { id },
+                where: { id, userId },
                 data: {
                     date,
                     totalAmount: Number(totalAmount),
-                    items: {
-                        create: finalItems
-                    }
+                    items: { create: finalItems }
                 },
                 include: { items: true }
             });
@@ -49,13 +45,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const userId = session.user.id;
+
     try {
         const resolvedParams = await params;
         const id = resolvedParams.id;
 
         await prisma.$transaction([
             prisma.item.deleteMany({ where: { receiptId: id } }),
-            prisma.receipt.delete({ where: { id } })
+            prisma.receipt.delete({ where: { id, userId } })
         ]);
 
         return NextResponse.json({ success: true });

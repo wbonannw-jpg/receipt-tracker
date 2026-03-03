@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { Camera, Home } from "lucide-react";
+import { SessionProvider } from "next-auth/react";
+import UserMenu from "@/components/UserMenu";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,26 +28,29 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        <header className="header">
-          <div className="container header-content">
-            <Link href="/" className="header-title">
-              🧾 Receipt Tracker
-            </Link>
-            <nav className="flex gap-4">
-              <Link href="/" className="flex flex-col items-center gap-1 text-sm slide-up" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
-                <Home size={20} />
-                <span>ホーム</span>
+        <SessionProvider>
+          <header className="header">
+            <div className="container header-content">
+              <Link href="/" className="header-title">
+                🧾 Receipt Tracker
               </Link>
-              <Link href="/camera" className="flex flex-col items-center gap-1 text-sm slide-up" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
-                <Camera size={20} />
-                <span>撮影</span>
-              </Link>
-            </nav>
-          </div>
-        </header>
-        <main className="container main-content fade-in">
-          {children}
-        </main>
+              <nav className="flex gap-4 items-center">
+                <Link href="/" className="flex flex-col items-center gap-1 text-sm slide-up" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
+                  <Home size={20} />
+                  <span>ホーム</span>
+                </Link>
+                <Link href="/camera" className="flex flex-col items-center gap-1 text-sm slide-up" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
+                  <Camera size={20} />
+                  <span>撮影</span>
+                </Link>
+                <UserMenu />
+              </nav>
+            </div>
+          </header>
+          <main className="container main-content fade-in">
+            {children}
+          </main>
+        </SessionProvider>
       </body>
     </html>
   );
