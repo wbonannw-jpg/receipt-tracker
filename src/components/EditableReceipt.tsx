@@ -171,30 +171,41 @@ export default function EditableReceipt({ initialReceipt }: { initialReceipt: Re
                     ) : (
                         <div className="flex flex-col gap-4">
                             {items.map((item, index) => (
-                                <div key={index} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1fr) auto', gap: '0.8rem', alignItems: 'center' }}>
-                                    <input
-                                        type="text"
-                                        value={item.name}
-                                        placeholder="品名"
-                                        onChange={(e) => handleItemChange(index, "name", e.target.value)}
-                                        style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)' }}
-                                    />
-                                    <div className="flex gap-2">
+                                <div key={index} style={{ background: 'var(--secondary)', borderRadius: '8px', padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    {/* Row 1: 品名 + 削除ボタン */}
+                                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                        <input
+                                            type="text"
+                                            value={item.name}
+                                            placeholder="品名"
+                                            onChange={(e) => handleItemChange(index, "name", e.target.value)}
+                                            style={{ flex: 1, padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)' }}
+                                        />
+                                        <button
+                                            onClick={() => handleRemoveItem(index)}
+                                            className="btn btn-outline"
+                                            style={{ padding: '0.6rem', width: 'auto', border: '1px solid var(--destructive)', color: 'var(--destructive)', flexShrink: 0 }}
+                                            title="削除"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                    {/* Row 2: 大分類 + 小分類 */}
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
                                         <select
                                             value={item.category || "未分類"}
                                             onChange={(e) => handleItemChange(index, "category", e.target.value)}
-                                            style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)' }}
+                                            style={{ flex: 1, minWidth: 0, padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)', fontSize: '0.9rem' }}
                                         >
                                             {CATEGORIES.map(cat => (
                                                 <option key={cat} value={cat}>{cat}</option>
                                             ))}
                                         </select>
-
                                         {(item.category && getSubCategories(item.category).length > 0) && (
                                             <select
                                                 value={item.subCategory || ""}
                                                 onChange={(e) => handleItemChange(index, "subCategory", e.target.value)}
-                                                style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--primary)', background: 'var(--background)', color: 'var(--foreground)' }}
+                                                style={{ flex: 1, minWidth: 0, padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--primary)', background: 'var(--background)', color: 'var(--foreground)', fontSize: '0.9rem' }}
                                             >
                                                 {getSubCategories(item.category).map(sub => (
                                                     <option key={sub} value={sub}>{sub}</option>
@@ -202,6 +213,7 @@ export default function EditableReceipt({ initialReceipt }: { initialReceipt: Re
                                             </select>
                                         )}
                                     </div>
+                                    {/* Row 3: 金額 */}
                                     <div style={{ position: 'relative' }}>
                                         <span style={{ position: 'absolute', left: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)' }}>¥</span>
                                         <input
@@ -211,15 +223,8 @@ export default function EditableReceipt({ initialReceipt }: { initialReceipt: Re
                                             style={{ width: '100%', padding: '0.6rem 0.6rem 0.6rem 2rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)' }}
                                         />
                                     </div>
-                                    <button
-                                        onClick={() => handleRemoveItem(index)}
-                                        className="btn btn-outline"
-                                        style={{ padding: '0.6rem', width: 'auto', border: '1px solid var(--destructive)', color: 'var(--destructive)' }}
-                                        title="削除"
-                                    >
-                                        <Trash2 size={20} />
-                                    </button>
                                 </div>
+
                             ))}
 
                             <button
