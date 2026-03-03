@@ -120,7 +120,7 @@ export default function EditableReceipt({ initialReceipt }: { initialReceipt: Re
             <div className="flex items-center justify-between mb-6">
                 <Link href="/" className="btn btn-outline" style={{ width: 'auto' }}>
                     <ArrowLeft size={20} />
-                    ダッシュボードに戻る
+                    ホームに戻る
                 </Link>
                 {!isEditing && (
                     <div className="flex gap-2">
