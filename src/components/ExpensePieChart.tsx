@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 type Item = {
     id: string;
@@ -91,13 +91,12 @@ export default function ExpensePieChart({ receipts }: Props) {
     };
 
     const renderCustomizedLabel = (props: any) => {
-        const { cx, cy, midAngle, outerRadius, percent, name, value, fill } = props;
+        const { cx, cy, midAngle, outerRadius, percent, fill } = props;
 
         // Hide label for small slices to prevent overlap, except if it's the only one
         if (percent < 0.03 && data.length > 5) return null;
 
         const RADIAN = Math.PI / 180;
-        // Increase radius slightly to place text outside
         const radius = outerRadius * 1.25;
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
         const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -111,23 +110,17 @@ export default function ExpensePieChart({ receipts }: Props) {
                 dominantBaseline="central"
                 style={{ fontSize: '12px', fontWeight: 'bold' }}
             >
-                {`${name} ${(percent * 100).toFixed(0)}%`}
-                <tspan
-                    x={x}
-                    dy="1.2em"
-                    fill="var(--foreground)"
-                    style={{ fontSize: '11px', opacity: 0.7 }}
-                >
-                    ¥{value.toLocaleString()}
-                </tspan>
+                {`${(percent * 100).toFixed(0)}%`}
             </text>
         );
     };
 
+    const total = data.reduce((sum, d) => sum + d.value, 0);
+
     return (
-        <div className="card slide-up" style={{ padding: '1.5rem', height: '400px' }}>
+        <div className="card slide-up" style={{ padding: '1.5rem' }}>
             <h3 style={{ margin: '0 0 1rem 0', textAlign: 'center', fontSize: '1.1rem' }}>カテゴリ別支出割合</h3>
-            <div style={{ width: '100%', height: 'calc(100% - 2rem)' }}>
+            <div style={{ width: '100%', height: '280px' }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
@@ -150,15 +143,23 @@ export default function ExpensePieChart({ receipts }: Props) {
                             ))}
                         </Pie>
                         <Tooltip content={<CustomTooltip />} />
-                        <Legend
-                            verticalAlign="bottom"
-                            height={36}
-                            formatter={(value, entry: any) => (
-                                <span style={{ color: 'var(--foreground)' }}>{value}</span>
-                            )}
-                        />
                     </PieChart>
                 </ResponsiveContainer>
+            </div>
+            {/* カスタムカテゴリリスト */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginTop: '1rem' }}>
+                {data.map((entry, index) => {
+                    const color = CATEGORY_COLORS[entry.name] || COLORS[index % COLORS.length];
+                    return (
+                        <div key={entry.name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                <span style={{ width: 10, height: 10, borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
+                                <span style={{ fontSize: '0.8rem', fontWeight: 500 }}>{entry.name}</span>
+                            </div>
+                            <span style={{ fontSize: '0.8rem', color: color, fontWeight: 600 }}>¥{entry.value.toLocaleString()}</span>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
