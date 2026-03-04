@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { Camera, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import { SessionProvider } from "next-auth/react";
 import UserMenu from "@/components/UserMenu";
 
@@ -38,10 +38,6 @@ export default function RootLayout({
                 <Link href="/" className="btn btn-outline flex items-center justify-center gap-2" style={{ width: 'auto' }}>
                   <Home size={20} />
                   ホーム
-                </Link>
-                <Link href="/camera" className="btn btn-outline flex items-center justify-center gap-2" style={{ width: 'auto' }}>
-                  <Camera size={20} />
-                  撮影
                 </Link>
                 <UserMenu />
               </nav>
