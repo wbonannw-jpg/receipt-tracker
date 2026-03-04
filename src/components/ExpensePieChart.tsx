@@ -103,8 +103,8 @@ export default function ExpenseStackedBar({ receipts }: Props) {
                         <XAxis type="number" hide />
                         <YAxis type="category" hide />
                         <Tooltip
-                            formatter={(value: number, name: string) => [
-                                `¥${value.toLocaleString()} (${((value / total) * 100).toFixed(1)}%)`,
+                            formatter={(value: any, name: any) => [
+                                `¥${Number(value).toLocaleString()} (${((Number(value) / total) * 100).toFixed(1)}%)`,
                                 name,
                             ]}
                             contentStyle={{
@@ -132,9 +132,9 @@ export default function ExpenseStackedBar({ receipts }: Props) {
                                 <LabelList
                                     dataKey={entry.name}
                                     position="center"
-                                    formatter={(v: number) =>
-                                        v / total >= 0.08
-                                            ? `${((v / total) * 100).toFixed(0)}%`
+                                    formatter={(v: any) =>
+                                        Number(v) / total >= 0.08
+                                            ? `${((Number(v) / total) * 100).toFixed(0)}%`
                                             : ""
                                     }
                                     style={{ fill: "#fff", fontSize: "11px", fontWeight: 600 }}
