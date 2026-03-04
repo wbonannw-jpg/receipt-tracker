@@ -88,14 +88,13 @@ export default function CameraPage() {
                         style={{ padding: '2rem 1rem', display: 'flex', flexDirection: 'column', gap: '1rem', height: 'auto' }}
                         onClick={() => {
                             if (fileInputRef.current) {
-                                // Remove capture attribute to allow picking from gallery on some devices
-                                fileInputRef.current.removeAttribute('capture');
+                                fileInputRef.current.setAttribute('capture', 'environment');
                                 fileInputRef.current.click();
                             }
                         }}
                     >
-                        <ImageIcon size={48} />
-                        <span style={{ fontSize: '1.25rem', fontWeight: 600 }}>画像を選択する</span>
+                        <Camera size={48} />
+                        <span style={{ fontSize: '1.25rem', fontWeight: 600 }}>カメラを起動する</span>
                     </button>
 
                     <button
@@ -103,13 +102,14 @@ export default function CameraPage() {
                         style={{ padding: '1.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '1rem', height: 'auto' }}
                         onClick={() => {
                             if (fileInputRef.current) {
-                                fileInputRef.current.setAttribute('capture', 'environment');
+                                // Remove capture attribute to allow picking from gallery on some devices
+                                fileInputRef.current.removeAttribute('capture');
                                 fileInputRef.current.click();
                             }
                         }}
                     >
-                        <Camera size={36} />
-                        <span style={{ fontSize: '1.125rem', fontWeight: 600 }}>カメラを起動する</span>
+                        <ImageIcon size={36} />
+                        <span style={{ fontSize: '1.125rem', fontWeight: 600 }}>画像を選択する</span>
                     </button>
                 </div>
             )}
