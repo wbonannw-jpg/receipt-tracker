@@ -34,14 +34,14 @@ export default function RootLayout({
               <Link href="/" className="header-title">
                 🧾 Receipt Tracker
               </Link>
-              <nav className="flex gap-4 items-center">
-                <Link href="/" className="flex flex-col items-center gap-1 text-sm slide-up" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
+              <nav className="flex gap-2 items-center">
+                <Link href="/" className="btn btn-outline flex items-center justify-center gap-2" style={{ width: 'auto' }}>
                   <Home size={20} />
-                  <span>ホーム</span>
+                  ホーム
                 </Link>
-                <Link href="/camera" className="flex flex-col items-center gap-1 text-sm slide-up" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
+                <Link href="/camera" className="btn btn-outline flex items-center justify-center gap-2" style={{ width: 'auto' }}>
                   <Camera size={20} />
-                  <span>撮影</span>
+                  撮影
                 </Link>
                 <UserMenu />
               </nav>
