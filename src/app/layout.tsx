@@ -34,9 +34,9 @@ export default function RootLayout({
               <Link href="/" className="header-title">
                 🧾 Receipt Tracker
               </Link>
-              <nav className="flex gap-2 items-center">
-                <Link href="/" className="btn btn-outline flex items-center justify-center gap-2" style={{ width: 'auto' }}>
-                  <Home size={20} />
+              <nav style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexShrink: 0, flexWrap: 'nowrap' }}>
+                <Link href="/" className="btn btn-outline flex items-center justify-center gap-2" style={{ width: 'auto', padding: '0.4rem 0.75rem', fontSize: '0.875rem' }}>
+                  <Home size={18} />
                   ホーム
                 </Link>
                 <UserMenu />

@@ -12,9 +12,9 @@ export default function UserMenu() {
         <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="btn btn-outline flex items-center justify-center gap-2"
-            style={{ width: "auto" }}
+            style={{ width: "auto", padding: '0.4rem 0.75rem', fontSize: '0.875rem' }}
         >
-            <LogOut size={20} />
+            <LogOut size={18} />
             ログアウト
         </button>
     );
