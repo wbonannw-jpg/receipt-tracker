@@ -455,7 +455,7 @@ export default function SettingsPage() {
                                 )}
                             </div>
                             <button className="btn btn-primary mt-2" onClick={handleAddRecurring}>
-                                <Plus size={20} /> 自動入力を登録
+                                <Plus size={20} /> 固定費を登録
                             </button>
                         </div>
                     </div>
