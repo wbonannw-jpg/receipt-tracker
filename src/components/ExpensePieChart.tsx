@@ -6,7 +6,6 @@ import {
     Bar,
     XAxis,
     YAxis,
-    Tooltip,
     ResponsiveContainer,
     Cell,
     LabelList,
@@ -102,18 +101,6 @@ export default function ExpenseStackedBar({ receipts }: Props) {
                     >
                         <XAxis type="number" hide />
                         <YAxis type="category" hide />
-                        <Tooltip
-                            formatter={(value: any, name: any) => [
-                                `¥${Number(value).toLocaleString()} (${((Number(value) / total) * 100).toFixed(1)}%)`,
-                                name,
-                            ]}
-                            contentStyle={{
-                                background: "var(--surface)",
-                                border: "1px solid var(--border)",
-                                borderRadius: "8px",
-                                fontSize: "0.85rem",
-                            }}
-                        />
                         {data.map((entry, index) => (
                             <Bar
                                 key={entry.name}
