@@ -23,7 +23,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ [
         <div className="flex gap-2 items-center flex-wrap justify-end">
           <Link href="/sales" className="btn btn-outline flex items-center justify-center gap-1" style={{ width: 'auto', padding: '0.4rem 0.6rem', color: 'var(--primary)', borderColor: 'var(--primary)', background: 'rgba(59, 130, 246, 0.05)' }}>
             <Percent size={18} />
-            <span className="font-bold text-sm">セール情報</span>
+            <span className="font-bold text-sm">セール</span>
           </Link>
           <Link href="/settings" className="btn btn-outline flex items-center justify-center gap-1" style={{ width: 'auto', padding: '0.4rem 0.6rem' }}>
             <Settings size={18} />
