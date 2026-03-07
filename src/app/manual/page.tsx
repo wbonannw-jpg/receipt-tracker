@@ -33,6 +33,26 @@ function ManualEntryForm() {
     // Calculator state
     const [activeCalcIndex, setActiveCalcIndex] = useState<number | null>(null);
 
+    // Initialize category once loaded
+    useEffect(() => {
+        if (!catsLoading && CATEGORIES.length > 0) {
+            setItems(prev => {
+                let changed = false;
+                const updated = prev.map(item => {
+                    if (item.category === "未分類" || !CATEGORIES.includes(item.category)) {
+                        changed = true;
+                        const firstCat = CATEGORIES[0];
+                        const subs = getSubCategories(firstCat);
+                        return { ...item, category: firstCat, subCategory: subs.length > 0 ? subs[0] : null };
+                    }
+                    return item;
+                });
+                return changed ? updated : prev;
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [catsLoading]);
+
     // Calculate total amount automatically
     const totalAmount = items.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
 
@@ -52,7 +72,14 @@ function ManualEntryForm() {
     };
 
     const addItem = () => {
-        setItems([...items, { name: "", price: 0, category: "未分類", subCategory: null }]);
+        const firstCat = CATEGORIES.length > 0 ? CATEGORIES[0] : "未分類";
+        const subs = CATEGORIES.length > 0 ? getSubCategories(firstCat) : [];
+        setItems([...items, {
+            name: "",
+            price: 0,
+            category: firstCat,
+            subCategory: subs.length > 0 ? subs[0] : null
+        }]);
     };
 
     const removeItem = (index: number) => {

@@ -43,6 +43,26 @@ export default function ResultPage() {
         setLoading(false);
     }, []);
 
+    // Initialize category once loaded
+    useEffect(() => {
+        if (!catsLoading && !loading && data && CATEGORIES.length > 0) {
+            let changed = false;
+            const newItems = data.items.map(item => {
+                if (!item.category || item.category === "未分類" || !CATEGORIES.includes(item.category)) {
+                    changed = true;
+                    const firstCat = CATEGORIES[0];
+                    const subs = getSubCategories(firstCat);
+                    return { ...item, category: firstCat, subCategory: subs.length > 0 ? subs[0] : null };
+                }
+                return item;
+            });
+            if (changed) {
+                setData({ ...data, items: newItems });
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [catsLoading, loading]);
+
     if (loading || catsLoading) return <div className="p-8 text-center text-muted">読み込み中...</div>;
 
     if (!data) {
@@ -74,9 +94,17 @@ export default function ResultPage() {
     };
 
     const addItem = () => {
+        if (!data) return;
+        const firstCat = CATEGORIES.length > 0 ? CATEGORIES[0] : "未分類";
+        const subs = CATEGORIES.length > 0 ? getSubCategories(firstCat) : [];
         setData({
             ...data,
-            items: [...data.items, { name: "", price: 0, category: "未分類", subCategory: null }]
+            items: [...data.items, {
+                name: "",
+                price: 0,
+                category: firstCat,
+                subCategory: subs.length > 0 ? subs[0] : null
+            }]
         });
     };
 

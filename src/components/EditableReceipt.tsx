@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Plus, Trash2, Edit2, X, Calculator } from "lucide-react";
 import Link from "next/link";
@@ -35,6 +35,26 @@ export default function EditableReceipt({ initialReceipt }: { initialReceipt: Re
     const [date, setDate] = useState(initialReceipt.date);
     const [items, setItems] = useState<Item[]>(initialReceipt.items.map(item => ({ ...item })));
 
+    // Normalize categories on load in case of legacy data or newly added items
+    useEffect(() => {
+        if (!catsLoading && CATEGORIES.length > 0) {
+            setItems(prev => {
+                let changed = false;
+                const updated = prev.map(item => {
+                    if (!item.category || item.category === "未分類" || !CATEGORIES.includes(item.category)) {
+                        changed = true;
+                        const firstCat = CATEGORIES[0];
+                        const subs = getSubCategories(firstCat);
+                        return { ...item, category: firstCat, subCategory: subs.length > 0 ? subs[0] : null };
+                    }
+                    return item;
+                });
+                return changed ? updated : prev;
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [catsLoading]);
+
     // Auto calculate total
     const currentTotal = items.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
 
@@ -50,7 +70,14 @@ export default function EditableReceipt({ initialReceipt }: { initialReceipt: Re
     };
 
     const handleAddItem = () => {
-        setItems([...items, { name: "", price: 0, category: "未分類", subCategory: null }]);
+        const firstCat = CATEGORIES.length > 0 ? CATEGORIES[0] : "未分類";
+        const subs = CATEGORIES.length > 0 ? getSubCategories(firstCat) : [];
+        setItems([...items, {
+            name: "",
+            price: 0,
+            category: firstCat,
+            subCategory: subs.length > 0 ? subs[0] : null
+        }]);
     };
 
     const handleRemoveItem = (index: number) => {
