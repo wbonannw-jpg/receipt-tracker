@@ -19,53 +19,67 @@ export async function GET(request: Request) {
 
     // Using Places API (New) endpoint to resolve LegacyApiNotActivatedMapError
     const url = 'https://places.googleapis.com/v1/places:searchNearby';
-    const requestBody = {
+    // Fire two queries parallelly to maximize results (up to 40)
+    // 1. By DISTANCE (gets the closest 20 stores)
+    const requestBodyDistance = {
         includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
         maxResultCount: 20,
         rankPreference: 'DISTANCE',
-        locationRestriction: {
-            circle: {
-                center: {
-                    latitude: parseFloat(lat),
-                    longitude: parseFloat(lng)
-                },
-                radius: parseFloat(radius)
-            }
-        },
+        locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+        languageCode: 'ja'
+    };
+
+    // 2. By POPULARITY (gets the 20 most popular stores in the radius, e.g., Ito Yokado)
+    const requestBodyPopularity = {
+        includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
+        maxResultCount: 20,
+        rankPreference: 'POPULARITY',
+        locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
         languageCode: 'ja'
     };
 
     try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Goog-Api-Key': apiKey,
-                'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.location,places.rating'
-            },
-            body: JSON.stringify(requestBody)
+        const fetchPlaces = async (body: any) => {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Goog-Api-Key': apiKey,
+                    'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.location,places.rating'
+                },
+                body: JSON.stringify(body)
+            });
+            if (!response.ok) {
+                console.error(`Google Places API (New) error: ${response.status}`, await response.text());
+                return [];
+            }
+            const data = await response.json();
+            return data.places || [];
+        };
+
+        const [distancePlaces, popularityPlaces] = await Promise.all([
+            fetchPlaces(requestBodyDistance),
+            fetchPlaces(requestBodyPopularity)
+        ]);
+
+        // Merge and deduplicate by place_id
+        const allPlacesMap = new Map();
+        [...distancePlaces, ...popularityPlaces].forEach(place => {
+            if (place && place.id && !allPlacesMap.has(place.id)) {
+                allPlacesMap.set(place.id, {
+                    place_id: place.id,
+                    name: place.displayName?.text,
+                    address: place.formattedAddress,
+                    location: {
+                        lat: place.location?.latitude,
+                        lng: place.location?.longitude
+                    },
+                    rating: place.rating,
+                });
+            }
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Google Places API (New) error: ${response.status}`, errorText);
-            return NextResponse.json({ error: 'Failed to fetch places from Google (New API)' }, { status: 502 });
-        }
-
-        const data = await response.json();
-
-        // Map the new API response to the format expected by the frontend
-        const places = (data.places || []).map((place: any) => ({
-            place_id: place.id,
-            name: place.displayName?.text,
-            address: place.formattedAddress,
-            location: {
-                lat: place.location?.latitude,
-                lng: place.location?.longitude
-            },
-            rating: place.rating,
-        }));
-
+        const places = Array.from(allPlacesMap.values());
         return NextResponse.json({ results: places });
     } catch (error) {
         console.error("Error fetching places:", error);
