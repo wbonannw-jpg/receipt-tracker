@@ -2,9 +2,17 @@ import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
 import { NextResponse } from "next/server";
 
-const { auth } = NextAuth(authConfig);
+let auth: any;
+try {
+    const authResult = NextAuth(authConfig);
+    auth = authResult.auth;
+} catch (error: any) {
+    auth = (req: any) => {
+        return NextResponse.json({ error: "Middleware Init Error: " + error.message, stack: error.stack }, { status: 500 });
+    };
+}
 
-export default auth((req) => {
+export default auth((req: any) => {
     const { pathname } = req.nextUrl;
 
     // Allow public routes
