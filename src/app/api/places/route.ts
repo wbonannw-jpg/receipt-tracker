@@ -5,6 +5,9 @@ export async function GET(request: Request) {
     const lat = searchParams.get('lat');
     const lng = searchParams.get('lng');
     const radius = searchParams.get('radius') || "10000"; // Default 10km
+    const typeParam = searchParams.get('type');
+    const validTypes = ['supermarket', 'drugstore', 'home_goods_store'];
+    const includedTypes = typeParam && validTypes.includes(typeParam) ? [typeParam] : validTypes;
 
     if (!lat || !lng) {
         return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
@@ -22,7 +25,7 @@ export async function GET(request: Request) {
     // Fire two queries parallelly to maximize results (up to 40)
     // 1. By DISTANCE (gets the closest 20 stores)
     const requestBodyDistance = {
-        includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
+        includedTypes: includedTypes,
         maxResultCount: 20,
         rankPreference: 'DISTANCE',
         locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
@@ -31,7 +34,7 @@ export async function GET(request: Request) {
 
     // 2. By POPULARITY (gets the 20 most popular stores in the radius, e.g., Ito Yokado)
     const requestBodyPopularity = {
-        includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
+        includedTypes: includedTypes,
         maxResultCount: 20,
         rankPreference: 'POPULARITY',
         locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },

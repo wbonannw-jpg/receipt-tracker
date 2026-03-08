@@ -16,7 +16,7 @@ export default function SalesPage() {
     const [onlineSales, setOnlineSales] = useState<SalePlatformStatus[]>([]);
 
     // GPS & Places Search State
-    const [radius, setRadius] = useState<number>(10000); // default 10km
+    const [storeType, setStoreType] = useState<string>('supermarket'); // default to supermarket
     const [isSearching, setIsSearching] = useState(false);
     const [locationError, setLocationError] = useState<string | null>(null);
     const [nearbySales, setNearbySales] = useState<PhysicalStoreSaleStatus[]>([]);
@@ -88,7 +88,7 @@ export default function SalesPage() {
                     const lng = position.coords.longitude;
 
                     // Fetch nearby places from our API
-                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}`);
+                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=10000&type=${storeType}`);
                     if (!res.ok) {
                         throw new Error("Failed to fetch nearby stores.");
                     }
@@ -277,7 +277,7 @@ export default function SalesPage() {
             {/* Physical Stores Section */}
             <h2 className="text-lg mb-3 flex items-center gap-2" style={{ color: 'var(--primary)' }}>
                 <Store size={20} />
-                周辺のスーパー・薬局
+                周辺のスーパー・薬局・ホームセンター
             </h2>
             <div className="card mb-8" style={{ padding: '1.5rem 1rem' }}>
                 <p className="text-sm text-muted mb-4">
@@ -286,16 +286,20 @@ export default function SalesPage() {
 
                 <div className="flex flex-col gap-3">
                     <div className="form-group mb-0">
-                        <label className="form-label text-sm">探索範囲</label>
+                        <label className="form-label text-sm">店舗形態</label>
                         <div className="flex gap-2">
-                            {[10000].map(val => (
+                            {[
+                                { id: 'supermarket', label: 'スーパー' },
+                                { id: 'drugstore', label: '薬局' },
+                                { id: 'home_goods_store', label: 'ホームセンター' }
+                            ].map(option => (
                                 <button
-                                    key={val}
-                                    onClick={() => setRadius(val)}
-                                    className={`btn ${radius === val ? 'btn-primary' : 'btn-outline'}`}
-                                    style={{ flex: 1, padding: '0.5rem' }}
+                                    key={option.id}
+                                    onClick={() => setStoreType(option.id)}
+                                    className={`btn ${storeType === option.id ? 'btn-primary' : 'btn-outline'}`}
+                                    style={{ flex: 1, padding: '0.5rem', fontSize: '0.875rem' }}
                                 >
-                                    {val / 1000}km
+                                    {option.label}
                                 </button>
                             ))}
                         </div>
