@@ -17,30 +17,51 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    // Build the request URL for Google Places API (Nearby Search)
-    // types: supermarket, drugstore, home_goods_store, convenience_store
-    const types = 'supermarket|drugstore|home_goods_store';
-    let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=${types}&language=ja&key=${apiKey}`;
+    // Using Places API (New) endpoint to resolve LegacyApiNotActivatedMapError
+    const url = 'https://places.googleapis.com/v1/places:searchNearby';
+    const requestBody = {
+        includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
+        maxResultCount: 20,
+        locationRestriction: {
+            circle: {
+                center: {
+                    latitude: parseFloat(lat),
+                    longitude: parseFloat(lng)
+                },
+                radius: parseFloat(radius)
+            }
+        },
+        languageCode: 'ja'
+    };
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Goog-Api-Key': apiKey,
+                'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.location,places.rating'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
         if (!response.ok) {
-            throw new Error(`Google API returned status ${response.status}`);
+            const errorText = await response.text();
+            console.error(`Google Places API (New) error: ${response.status}`, errorText);
+            return NextResponse.json({ error: 'Failed to fetch places from Google (New API)' }, { status: 502 });
         }
 
         const data = await response.json();
 
-        if (data.status !== "OK" && data.status !== "ZERO_RESULTS") {
-            console.error("Google API error details:", data);
-            return NextResponse.json({ error: `Google API Error: ${data.status} - ${data.error_message}` }, { status: 502 });
-        }
-
-        // We only need the basic info
-        const places = data.results.map((place: any) => ({
-            place_id: place.place_id,
-            name: place.name,
-            address: place.vicinity,
-            location: place.geometry?.location,
+        // Map the new API response to the format expected by the frontend
+        const places = (data.places || []).map((place: any) => ({
+            place_id: place.id,
+            name: place.displayName?.text,
+            address: place.formattedAddress,
+            location: {
+                lat: place.location?.latitude,
+                lng: place.location?.longitude
+            },
             rating: place.rating,
         }));
 
