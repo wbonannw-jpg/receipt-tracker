@@ -22,6 +22,7 @@ export async function GET(request: Request) {
     const requestBody = {
         includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
         maxResultCount: 20,
+        rankPreference: 'DISTANCE',
         locationRestriction: {
             circle: {
                 center: {
