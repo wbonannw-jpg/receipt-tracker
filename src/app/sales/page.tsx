@@ -16,7 +16,7 @@ export default function SalesPage() {
     const [onlineSales, setOnlineSales] = useState<SalePlatformStatus[]>([]);
 
     // GPS & Places Search State
-    const [radius, setRadius] = useState<number>(30000); // default 30km
+    const [radius, setRadius] = useState<number>(10000); // default 10km
     const [isSearching, setIsSearching] = useState(false);
     const [locationError, setLocationError] = useState<string | null>(null);
     const [nearbySales, setNearbySales] = useState<PhysicalStoreSaleStatus[]>([]);
@@ -288,7 +288,7 @@ export default function SalesPage() {
                     <div className="form-group mb-0">
                         <label className="form-label text-sm">探索範囲</label>
                         <div className="flex gap-2">
-                            {[10000, 30000, 50000].map(val => (
+                            {[10000].map(val => (
                                 <button
                                     key={val}
                                     onClick={() => setRadius(val)}
