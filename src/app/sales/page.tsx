@@ -16,7 +16,7 @@ export default function SalesPage() {
     const [onlineSales, setOnlineSales] = useState<SalePlatformStatus[]>([]);
 
     // GPS & Places Search State
-    const [radius, setRadius] = useState<number>(10000); // default 10km
+    const [radius, setRadius] = useState<number>(30000); // default 30km
     const [isSearching, setIsSearching] = useState(false);
     const [locationError, setLocationError] = useState<string | null>(null);
     const [nearbySales, setNearbySales] = useState<PhysicalStoreSaleStatus[]>([]);
@@ -87,30 +87,8 @@ export default function SalesPage() {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
 
-                    // 1. Identify which predefined chains are on sale today
-                    const activeChainStores: string[] = [];
-                    // We need to import chainStores from salesRules to loop through them
-                    // Since we can't easily export the internal const, we can just check a predefined list
-                    const possibleChains = ['イトーヨーカドー', 'イオン', 'マックスバリュ', 'ウエルシア', 'マツモトキヨシ', 'スギ薬局', 'サンドラッグ', 'ツルハドラッグ', 'ココカラファイン', 'クリエイト', 'カワチ薬品'];
-
-                    possibleChains.forEach(chain => {
-                        const status = checkPhysicalStoreSale(chain, new Date());
-                        if (status && status.isSaleToday) {
-                            activeChainStores.push(chain);
-                        }
-                    });
-
-                    // 2. Identify custom user rules that are on sale today
-                    const activeCustomStores = todayCustomSales.map(rule => rule.storeName);
-
-                    // Combine all active stores to target specifically
-                    const targetStoresList = [...activeChainStores, ...activeCustomStores];
-                    const targetStoreQuery = targetStoresList.length > 0
-                        ? `&targetStore=${encodeURIComponent(targetStoresList.join(','))}`
-                        : '';
-
-                    // Fetch nearby places from our API (both general search + targeted search)
-                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}${targetStoreQuery}`);
+                    // Fetch nearby places from our API
+                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}`);
                     if (!res.ok) {
                         throw new Error("Failed to fetch nearby stores.");
                     }
@@ -310,7 +288,7 @@ export default function SalesPage() {
                     <div className="form-group mb-0">
                         <label className="form-label text-sm">探索範囲</label>
                         <div className="flex gap-2">
-                            {[10000].map(val => (
+                            {[10000, 30000, 50000].map(val => (
                                 <button
                                     key={val}
                                     onClick={() => setRadius(val)}
