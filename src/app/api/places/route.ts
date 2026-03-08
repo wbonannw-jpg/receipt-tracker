@@ -6,8 +6,18 @@ export async function GET(request: Request) {
     const lng = searchParams.get('lng');
     const radius = searchParams.get('radius') || "10000"; // Default 10km
     const typeParam = searchParams.get('type');
-    const validTypes = ['supermarket', 'drugstore', 'home_goods_store'];
-    const includedTypes = typeParam && validTypes.includes(typeParam) ? [typeParam] : validTypes;
+
+    const typeMapping: Record<string, string[]> = {
+        'supermarket': ['supermarket', 'grocery_store', 'department_store', 'shopping_mall', 'discount_store'],
+        'drugstore': ['drugstore', 'pharmacy'],
+        'home_goods_store': ['home_goods_store', 'hardware_store']
+    };
+
+    // If typeParam is provided and exists in mapping, use those types.
+    // Otherwise fallback to all types across all 3 categories.
+    const includedTypes = (typeParam && typeMapping[typeParam])
+        ? typeMapping[typeParam]
+        : [...typeMapping['supermarket'], ...typeMapping['drugstore'], ...typeMapping['home_goods_store']];
 
     if (!lat || !lng) {
         return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
