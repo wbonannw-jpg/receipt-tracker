@@ -87,8 +87,30 @@ export default function SalesPage() {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
 
-                    // Fetch nearby places from our API
-                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}`);
+                    // 1. Identify which predefined chains are on sale today
+                    const activeChainStores: string[] = [];
+                    // We need to import chainStores from salesRules to loop through them
+                    // Since we can't easily export the internal const, we can just check a predefined list
+                    const possibleChains = ['イトーヨーカドー', 'イオン', 'マックスバリュ', 'ウエルシア', 'マツモトキヨシ', 'スギ薬局', 'サンドラッグ', 'ツルハドラッグ', 'ココカラファイン', 'クリエイト', 'カワチ薬品'];
+
+                    possibleChains.forEach(chain => {
+                        const status = checkPhysicalStoreSale(chain, new Date());
+                        if (status && status.isSaleToday) {
+                            activeChainStores.push(chain);
+                        }
+                    });
+
+                    // 2. Identify custom user rules that are on sale today
+                    const activeCustomStores = todayCustomSales.map(rule => rule.storeName);
+
+                    // Combine all active stores to target specifically
+                    const targetStoresList = [...activeChainStores, ...activeCustomStores];
+                    const targetStoreQuery = targetStoresList.length > 0
+                        ? `&targetStore=${encodeURIComponent(targetStoresList.join(','))}`
+                        : '';
+
+                    // Fetch nearby places from our API (both general search + targeted search)
+                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}${targetStoreQuery}`);
                     if (!res.ok) {
                         throw new Error("Failed to fetch nearby stores.");
                     }

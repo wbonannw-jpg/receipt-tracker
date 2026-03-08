@@ -5,6 +5,7 @@ export async function GET(request: Request) {
     const lat = searchParams.get('lat');
     const lng = searchParams.get('lng');
     const radius = searchParams.get('radius') || "10000"; // Default 10km
+    const targetStoreStr = searchParams.get('targetStore');
 
     if (!lat || !lng) {
         return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
@@ -17,29 +18,8 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    // Using Places API (New) endpoint to resolve LegacyApiNotActivatedMapError
-    const url = 'https://places.googleapis.com/v1/places:searchNearby';
-    // Fire two queries parallelly to maximize results (up to 40)
-    // 1. By DISTANCE (gets the closest 20 stores)
-    const requestBodyDistance = {
-        includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
-        maxResultCount: 20,
-        rankPreference: 'DISTANCE',
-        locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
-        languageCode: 'ja'
-    };
-
-    // 2. By POPULARITY (gets the 20 most popular stores in the radius, e.g., Ito Yokado)
-    const requestBodyPopularity = {
-        includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
-        maxResultCount: 20,
-        rankPreference: 'POPULARITY',
-        locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
-        languageCode: 'ja'
-    };
-
     try {
-        const fetchPlaces = async (body: any) => {
+        const fetchPlaces = async (url: string, body: any) => {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -50,21 +30,66 @@ export async function GET(request: Request) {
                 body: JSON.stringify(body)
             });
             if (!response.ok) {
-                console.error(`Google Places API (New) error: ${response.status}`, await response.text());
+                console.error(`Google Places API error: ${response.status}`, await response.text());
                 return [];
             }
             const data = await response.json();
             return data.places || [];
         };
 
-        const [distancePlaces, popularityPlaces] = await Promise.all([
-            fetchPlaces(requestBodyDistance),
-            fetchPlaces(requestBodyPopularity)
-        ]);
+        let allFetchedPlaces: any[] = [];
+
+        if (targetStoreStr) {
+            // TARGETED TEXT SEARCH (Bypass 20 limit by specifically asking for the store)
+            const targetStores = targetStoreStr.split(',').filter(Boolean);
+            const textSearchUrl = 'https://places.googleapis.com/v1/places:searchText';
+
+            const promises = targetStores.map(store => {
+                const requestBody = {
+                    textQuery: store,
+                    includedType: 'store',
+                    locationBias: {
+                        circle: {
+                            center: { latitude: parseFloat(lat), longitude: parseFloat(lng) },
+                            radius: parseFloat(radius)
+                        }
+                    },
+                    languageCode: 'ja'
+                };
+                return fetchPlaces(textSearchUrl, requestBody);
+            });
+
+            const results = await Promise.all(promises);
+            allFetchedPlaces = results.flat();
+
+        } else {
+            // GENERAL NEARBY SEARCH (Distance + Popularity)
+            const nearbyUrl = 'https://places.googleapis.com/v1/places:searchNearby';
+            const requestBodyDistance = {
+                includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
+                maxResultCount: 20,
+                rankPreference: 'DISTANCE',
+                locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+                languageCode: 'ja'
+            };
+            const requestBodyPopularity = {
+                includedTypes: ['supermarket', 'drugstore', 'home_goods_store'],
+                maxResultCount: 20,
+                rankPreference: 'POPULARITY',
+                locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+                languageCode: 'ja'
+            };
+
+            const [distancePlaces, popularityPlaces] = await Promise.all([
+                fetchPlaces(nearbyUrl, requestBodyDistance),
+                fetchPlaces(nearbyUrl, requestBodyPopularity)
+            ]);
+            allFetchedPlaces = [...distancePlaces, ...popularityPlaces];
+        }
 
         // Merge and deduplicate by place_id
         const allPlacesMap = new Map();
-        [...distancePlaces, ...popularityPlaces].forEach(place => {
+        allFetchedPlaces.forEach(place => {
             if (place && place.id && !allPlacesMap.has(place.id)) {
                 allPlacesMap.set(place.id, {
                     place_id: place.id,
