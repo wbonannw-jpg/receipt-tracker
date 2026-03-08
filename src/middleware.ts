@@ -5,7 +5,7 @@ export default auth((req) => {
     const { pathname } = req.nextUrl;
 
     // Allow public routes
-    if (pathname.startsWith("/login") || pathname.startsWith("/api/auth")) {
+    if (pathname.startsWith("/login") || pathname.startsWith("/api/auth") || pathname.startsWith("/api/places")) {
         return NextResponse.next();
     }
 
