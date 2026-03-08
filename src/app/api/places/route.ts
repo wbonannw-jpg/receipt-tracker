@@ -31,8 +31,8 @@ export async function GET(request: Request) {
         const data = await response.json();
 
         if (data.status !== "OK" && data.status !== "ZERO_RESULTS") {
-            console.error("Google API error:", data.status, data.error_message);
-            return NextResponse.json({ error: 'Failed to fetch places from Google' }, { status: 502 });
+            console.error("Google API error details:", data);
+            return NextResponse.json({ error: `Google API Error: ${data.status} - ${data.error_message}` }, { status: 502 });
         }
 
         // We only need the basic info
