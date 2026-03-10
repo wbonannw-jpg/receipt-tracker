@@ -34,17 +34,29 @@ export async function GET(request: Request) {
 
     const url = 'https://places.googleapis.com/v1/places:searchNearby';
 
-    // Distance-ordered search: nearest 10 stores
-    const requestBody = {
-        includedTypes: includedTypes,
-        maxResultCount: 20, // Fetch 20 so we have buffer after filtering out individual stores
-        rankPreference: 'DISTANCE',
-        locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
-        languageCode: 'ja'
-    };
+    // For home centers, use searchText for better Japanese store matching
+    const isHomeCenter = typeParam === 'home_goods_store';
+    const searchUrl = isHomeCenter
+        ? 'https://places.googleapis.com/v1/places:searchText'
+        : url;
+
+    const requestBody: any = isHomeCenter
+        ? {
+            textQuery: 'ホームセンター',
+            locationBias: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+            maxResultCount: 20,
+            languageCode: 'ja'
+        }
+        : {
+            includedTypes: includedTypes,
+            maxResultCount: 20,
+            rankPreference: 'DISTANCE',
+            locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+            languageCode: 'ja'
+        };
 
     try {
-        const response = await fetch(url, {
+        const response = await fetch(searchUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
