@@ -37,7 +37,7 @@ export async function GET(request: Request) {
     // Distance-ordered search: nearest 10 stores
     const requestBody = {
         includedTypes: includedTypes,
-        maxResultCount: 10,
+        maxResultCount: 20, // Fetch 20 so we have buffer after filtering out individual stores
         rankPreference: 'DISTANCE',
         locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
         languageCode: 'ja'
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
             headers: {
                 'Content-Type': 'application/json',
                 'X-Goog-Api-Key': apiKey,
-                'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.types'
+                'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.types'
             },
             body: JSON.stringify(requestBody)
         });
@@ -60,17 +60,22 @@ export async function GET(request: Request) {
         }
 
         const data = await response.json();
-        const places = (data.places || []).map((place: any) => ({
-            place_id: place.id,
-            name: place.displayName?.text,
-            address: place.formattedAddress,
-            location: {
-                lat: place.location?.latitude,
-                lng: place.location?.longitude
-            },
-            rating: place.rating,
-            types: place.types,
-        }));
+        const MIN_REVIEWS = 20; // Filter out very small individual stores
+        const places = (data.places || [])
+            .filter((place: any) => (place.userRatingCount ?? 0) >= MIN_REVIEWS)
+            .slice(0, 10) // Keep top 10 after filtering
+            .map((place: any) => ({
+                place_id: place.id,
+                name: place.displayName?.text,
+                address: place.formattedAddress,
+                location: {
+                    lat: place.location?.latitude,
+                    lng: place.location?.longitude
+                },
+                rating: place.rating,
+                userRatingCount: place.userRatingCount,
+                types: place.types,
+            }));
 
         return NextResponse.json({ results: places });
     } catch (error) {
