@@ -60,7 +60,7 @@ export async function GET(request: Request) {
         }
 
         const data = await response.json();
-        const MIN_REVIEWS = 50; // Filter out very small individual stores
+        const MIN_REVIEWS = typeParam === 'drugstore' ? 20 : 50; // Drugstores use 20, others 50
         const places = (data.places || [])
             .filter((place: any) => (place.userRatingCount ?? 0) >= MIN_REVIEWS)
             .slice(0, 10) // Keep top 10 after filtering
