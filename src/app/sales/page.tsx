@@ -2,14 +2,21 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, MapPin, ExternalLink, ShoppingBag, Store, Search, Plus, Trash2 } from "lucide-react";
-import { getOnlineSales, checkPhysicalStoreSale, SalePlatformStatus, PhysicalStoreSaleStatus } from "@/lib/salesRules";
+import { ArrowLeft, MapPin, ExternalLink, ShoppingBag, Store, Plus, Trash2 } from "lucide-react";
+import { getOnlineSales, SalePlatformStatus } from "@/lib/salesRules";
 
 type CustomSaleRule = {
     id: string;
     storeName: string;
     saleDay: number;
     description: string;
+};
+
+type NearbyStore = {
+    name: string;
+    address?: string;
+    distance?: number;
+    rating?: number;
 };
 
 export default function SalesPage() {
@@ -19,7 +26,7 @@ export default function SalesPage() {
     const [storeType, setStoreType] = useState<string>('supermarket'); // default to supermarket
     const [isSearching, setIsSearching] = useState(false);
     const [locationError, setLocationError] = useState<string | null>(null);
-    const [nearbySales, setNearbySales] = useState<PhysicalStoreSaleStatus[]>([]);
+    const [nearbyStores, setNearbyStores] = useState<NearbyStore[]>([]);
     const [hasSearched, setHasSearched] = useState(false);
 
     // Custom Rules State
@@ -72,7 +79,7 @@ export default function SalesPage() {
     const handleSearchNearby = () => {
         setIsSearching(true);
         setLocationError(null);
-        setNearbySales([]);
+        setNearbyStores([]);
         setHasSearched(false);
 
         if (!navigator.geolocation) {
@@ -87,56 +94,24 @@ export default function SalesPage() {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
 
-                    // 1. Determine ALL target stores that are on sale today
-                    const majorChains = ['イトーヨーカドー', 'イオン', 'ドン・キホーテ', 'マツモトキヨシ', 'ウエルシア', 'コーナン', 'アピタ', 'バロー', 'ベイシア'];
-                    // Add custom rule store names as well
-                    const allPotentialTargets = [...majorChains, ...todayCustomSales.map(s => s.storeName)];
-
-                    const todayTargetStores: string[] = [];
-                    for (const chain of allPotentialTargets) {
-                        const status = checkPhysicalStoreSale(chain, new Date());
-                        if (status && status.isSaleToday) {
-                            todayTargetStores.push(chain);
-                        }
-                    }
-
-                    // Build URL with one &targetStore= param per matching store
-                    const targetStoreQuery = todayTargetStores.map(s => `&targetStore=${encodeURIComponent(s)}`).join('');
-                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=10000&type=${storeType}${targetStoreQuery}`);
-
+                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=10000&type=${storeType}`);
                     if (!res.ok) {
                         throw new Error("Failed to fetch nearby stores.");
                     }
 
                     const data = await res.json();
 
-                    if (data.results && data.results.length > 0) {
-                        const matchingSales: PhysicalStoreSaleStatus[] = [];
+                    const stores: NearbyStore[] = (data.results || []).map((place: any) => {
+                        let dist: number | undefined = undefined;
+                        if (place.location?.lat && place.location?.lng) {
+                            dist = calculateDistance(lat, lng, place.location.lat, place.location.lng);
+                        }
+                        return { name: place.name, address: place.address, distance: dist, rating: place.rating };
+                    });
 
-                        data.results.forEach((place: any) => {
-                            const saleStatus = checkPhysicalStoreSale(place.name, new Date());
-
-                            // If we have a rule for this store length AND it is on sale today
-                            if (saleStatus && saleStatus.isSaleToday) {
-                                // calculate distance if we have lat/lng
-                                let dist = undefined;
-                                if (place.location && place.location.lat && place.location.lng) {
-                                    dist = calculateDistance(lat, lng, place.location.lat, place.location.lng);
-                                }
-
-                                matchingSales.push({
-                                    ...saleStatus,
-                                    address: place.address,
-                                    distance: dist
-                                });
-                            }
-                        });
-
-                        // Sort by distance
-                        matchingSales.sort((a, b) => (a.distance || 99) - (b.distance || 99));
-                        setNearbySales(matchingSales);
-                    }
-
+                    // Already distance-ordered from API, but recalculate client-side just in case
+                    stores.sort((a, b) => (a.distance ?? 999) - (b.distance ?? 999));
+                    setNearbyStores(stores);
                     setHasSearched(true);
                 } catch (err: any) {
                     setLocationError(err.message || "店舗の検索中にエラーが発生しました。");
@@ -345,23 +320,22 @@ export default function SalesPage() {
                 {hasSearched && !isSearching && (
                     <div className="slide-up mt-6 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
                         <h3 className="text-md mb-3 font-bold">探索結果</h3>
-                        {nearbySales.length > 0 ? (
+                        {nearbyStores.length > 0 ? (
                             <div className="flex flex-col gap-3">
-                                {nearbySales.map((sale, i) => (
-                                    <div key={i} className="card" style={{ padding: '1rem', borderLeft: '4px solid var(--success)', marginBottom: 0 }}>
+                                {nearbyStores.map((store: NearbyStore, i: number) => (
+                                    <div key={i} className="card" style={{ padding: '1rem', borderLeft: '4px solid var(--primary)', marginBottom: 0 }}>
                                         <div className="flex justify-between items-start mb-1">
-                                            <h4 style={{ margin: 0, fontSize: '1rem' }}>{sale.storeName}</h4>
-                                            {sale.distance !== undefined && (
+                                            <h4 style={{ margin: 0, fontSize: '1rem' }}>{store.name}</h4>
+                                            {store.distance !== undefined && (
                                                 <span className="text-xs font-bold" style={{ background: 'var(--secondary)', padding: '0.2rem 0.4rem', borderRadius: '4px' }}>
-                                                    ここから約{sale.distance}km
+                                                    約{store.distance}km
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="font-bold m-0 mt-2 text-sm" style={{ color: 'var(--destructive)' }}>{sale.description}</p>
-                                        {sale.address && (
+                                        {store.address && (
                                             <p className="text-xs text-muted m-0 mt-2 flex items-center gap-1">
                                                 <MapPin size={12} />
-                                                {sale.address}
+                                                {store.address}
                                             </p>
                                         )}
                                     </div>
@@ -369,7 +343,7 @@ export default function SalesPage() {
                             </div>
                         ) : (
                             <div className="text-center py-4 bg-secondary rounded">
-                                <p className="text-muted m-0 text-sm">指定した範囲内に、今日が特売日の対象店舗は見つかりませんでした。</p>
+                                <p className="text-muted m-0 text-sm">周辺に該当する店舗が見つかりませんでした。</p>
                             </div>
                         )}
                     </div>
