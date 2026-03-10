@@ -6,7 +6,7 @@ export async function GET(request: Request) {
     const lng = searchParams.get('lng');
     const radius = searchParams.get('radius') || "10000"; // Default 10km
     const typeParam = searchParams.get('type');
-    const targetStore = searchParams.get('targetStore');
+    const targetStores = searchParams.getAll('targetStore');
 
     const typeMapping: Record<string, string[]> = {
         'supermarket': ['supermarket', 'grocery_store', 'department_store', 'shopping_mall', 'discount_store'],
@@ -84,17 +84,14 @@ export async function GET(request: Request) {
             fetchPlaces(requestBodyPopularity)
         ];
 
-        // 3. Optional: By TARGET STORE NAME (searchText)
-        if (targetStore) {
+        // 3. Optional: By TARGET STORE NAMES (searchText), one query per store, max 3 each
+        for (const targetStore of targetStores) {
             const requestBodyTargetStore: any = {
                 textQuery: targetStore,
-                includedType: includedTypes.find(t => t === 'supermarket') || includedTypes[0], // searchText expects includedType (singular) but often requires just textQuery prioritizing location
                 locationBias: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
-                maxResultCount: 5, // Limit targeted store results to prevent them from overwhelming the list
+                maxResultCount: 3, // Max 3 per target store to prevent flooding
                 languageCode: 'ja'
             };
-            // delete includedType to give pure textQuery broad search
-            delete requestBodyTargetStore.includedType;
             fetchPromises.push(fetchPlaces(requestBodyTargetStore, true));
         }
 
