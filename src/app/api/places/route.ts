@@ -7,18 +7,6 @@ export async function GET(request: Request) {
     const radius = searchParams.get('radius') || "10000"; // Default 10km
     const typeParam = searchParams.get('type');
 
-    const typeMapping: Record<string, string[]> = {
-        'supermarket': ['supermarket', 'grocery_store', 'department_store', 'shopping_mall', 'discount_store'],
-        'drugstore': ['drugstore', 'pharmacy'],
-        'home_goods_store': ['home_goods_store', 'hardware_store']
-    };
-
-    // If typeParam is provided and exists in mapping, use those types.
-    // Otherwise fallback to all types across all 3 categories.
-    const includedTypes = (typeParam && typeMapping[typeParam])
-        ? typeMapping[typeParam]
-        : [...typeMapping['supermarket'], ...typeMapping['drugstore'], ...typeMapping['home_goods_store']];
-
     if (!lat || !lng) {
         return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
     }
@@ -32,31 +20,26 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    const url = 'https://places.googleapis.com/v1/places:searchNearby';
+    // Map type to Japanese text query and review threshold
+    const typeConfig: Record<string, { query: string; minReviews: number }> = {
+        'supermarket': { query: 'スーパーマーケット', minReviews: 50 },
+        'drugstore': { query: '薬局', minReviews: 20 },
+        'home_goods_store': { query: 'ホームセンター', minReviews: 50 },
+    };
 
-    // For home centers, use searchText for better Japanese store matching
-    const isHomeCenter = typeParam === 'home_goods_store';
-    const searchUrl = isHomeCenter
-        ? 'https://places.googleapis.com/v1/places:searchText'
-        : url;
+    const config = typeParam && typeConfig[typeParam]
+        ? typeConfig[typeParam]
+        : { query: 'スーパーマーケット', minReviews: 50 };
 
-    const requestBody: any = isHomeCenter
-        ? {
-            textQuery: 'ホームセンター',
-            locationBias: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
-            maxResultCount: 20,
-            languageCode: 'ja'
-        }
-        : {
-            includedTypes: includedTypes,
-            maxResultCount: 20,
-            rankPreference: 'DISTANCE',
-            locationRestriction: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
-            languageCode: 'ja'
-        };
+    const requestBody = {
+        textQuery: config.query,
+        locationBias: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+        maxResultCount: 20,
+        languageCode: 'ja'
+    };
 
     try {
-        const response = await fetch(searchUrl, {
+        const response = await fetch('https://places.googleapis.com/v1/places:searchText', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,10 +55,9 @@ export async function GET(request: Request) {
         }
 
         const data = await response.json();
-        const MIN_REVIEWS = typeParam === 'drugstore' ? 20 : 50; // Drugstores use 20, others 50
         const places = (data.places || [])
-            .filter((place: any) => (place.userRatingCount ?? 0) >= MIN_REVIEWS)
-            .slice(0, 10) // Keep top 10 after filtering
+            .filter((place: any) => (place.userRatingCount ?? 0) >= config.minReviews)
+            .slice(0, 10)
             .map((place: any) => ({
                 place_id: place.id,
                 name: place.displayName?.text,
