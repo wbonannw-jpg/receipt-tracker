@@ -6,6 +6,7 @@ export async function GET(request: Request) {
     const lng = searchParams.get('lng');
     const radius = searchParams.get('radius') || "10000"; // Default 10km
     const typeParam = searchParams.get('type');
+    const targetStore = searchParams.get('targetStore');
 
     const typeMapping: Record<string, string[]> = {
         'supermarket': ['supermarket', 'grocery_store', 'department_store', 'shopping_mall', 'discount_store'],
@@ -52,8 +53,12 @@ export async function GET(request: Request) {
     };
 
     try {
-        const fetchPlaces = async (body: any) => {
-            const response = await fetch(url, {
+        const fetchPlaces = async (body: any, isTextSearch = false) => {
+            const urlToUse = isTextSearch
+                ? 'https://places.googleapis.com/v1/places:searchText'
+                : url;
+
+            const response = await fetch(urlToUse, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,14 +75,29 @@ export async function GET(request: Request) {
             return data.places || [];
         };
 
-        const [distancePlaces, popularityPlaces] = await Promise.all([
+        const fetchPromises = [
             fetchPlaces(requestBodyDistance),
             fetchPlaces(requestBodyPopularity)
-        ]);
+        ];
+
+        // 3. Optional: By TARGET STORE NAME (searchText)
+        if (targetStore) {
+            const requestBodyTargetStore: any = {
+                textQuery: targetStore,
+                includedType: includedTypes.find(t => t === 'supermarket') || includedTypes[0], // searchText expects includedType (singular) but often requires just textQuery prioritizing location
+                locationBias: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+                languageCode: 'ja'
+            };
+            // delete includedType to give pure textQuery broad search
+            delete requestBodyTargetStore.includedType;
+            fetchPromises.push(fetchPlaces(requestBodyTargetStore, true));
+        }
+
+        const resultsArray = await Promise.all(fetchPromises);
 
         // Merge and deduplicate by place_id
         const allPlacesMap = new Map();
-        [...distancePlaces, ...popularityPlaces].forEach(place => {
+        resultsArray.flat().forEach(place => {
             if (place && place.id && !allPlacesMap.has(place.id)) {
                 allPlacesMap.set(place.id, {
                     place_id: place.id,

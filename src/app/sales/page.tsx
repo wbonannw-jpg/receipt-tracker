@@ -87,8 +87,29 @@ export default function SalesPage() {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
 
+                    // 1. Determine target store name if today is a special day
+                    // We check all possible rules. If there's a match string, we'll try to get it.
+                    // For simplicity, let's pick the first major chain that is on sale today.
+                    // You could expand this to fetch multiple, but Places API `textQuery` works well with one major brand name.
+                    let targetStoreName: string | undefined = undefined;
+
+                    // We'll just define the major ones we want to explicitly catch if they are on sale
+                    const majorChains = ['イトーヨーカドー', 'イオン', 'ドン・キホーテ', 'マツモトキヨシ', 'ウエルシア', 'コーナン'];
+                    // Add custom rule store names as well
+                    const allPotentialTargets = [...majorChains, ...todayCustomSales.map(s => s.storeName)];
+
+                    for (const chain of allPotentialTargets) {
+                        const status = checkPhysicalStoreSale(chain, new Date());
+                        if (status && status.isSaleToday) {
+                            targetStoreName = chain;
+                            break; // Just take the first one found for now to add to the search
+                        }
+                    }
+
                     // Fetch nearby places from our API
-                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=10000&type=${storeType}`);
+                    const targetStoreQuery = targetStoreName ? `&targetStore=${encodeURIComponent(targetStoreName)}` : '';
+                    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=10000&type=${storeType}${targetStoreQuery}`);
+
                     if (!res.ok) {
                         throw new Error("Failed to fetch nearby stores.");
                     }
