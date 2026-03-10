@@ -90,6 +90,7 @@ export async function GET(request: Request) {
                 textQuery: targetStore,
                 includedType: includedTypes.find(t => t === 'supermarket') || includedTypes[0], // searchText expects includedType (singular) but often requires just textQuery prioritizing location
                 locationBias: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+                maxResultCount: 5, // Limit targeted store results to prevent them from overwhelming the list
                 languageCode: 'ja'
             };
             // delete includedType to give pure textQuery broad search
