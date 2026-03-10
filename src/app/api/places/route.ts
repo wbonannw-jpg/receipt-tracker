@@ -24,7 +24,11 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
     }
 
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    const rawApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY;
+    // Strip invalid characters to prevent TypeError: Cannot convert argument to a ByteString
+    const apiKey = rawApiKey ? Array.from(rawApiKey).filter(c => c.charCodeAt(0) <= 255).join('').trim() : undefined;
+
+    console.log("Places API executing. API Key exists?", !!apiKey, "Length:", apiKey ? apiKey.length : 0);
 
     if (!apiKey) {
         console.error("Google Maps API key is missing");
