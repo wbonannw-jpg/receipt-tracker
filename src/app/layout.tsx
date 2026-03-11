@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Home } from "lucide-react";
 import { SessionProvider } from "next-auth/react";
 import UserMenu from "@/components/UserMenu";
+import AuthGuard from "@/components/AuthGuard";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,9 +44,11 @@ export default function RootLayout({
               </nav>
             </div>
           </header>
-          <main className="container main-content fade-in">
-            {children}
-          </main>
+          <AuthGuard>
+            <main className="container main-content fade-in">
+              {children}
+            </main>
+          </AuthGuard>
         </SessionProvider>
       </body>
     </html>
