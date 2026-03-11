@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     // Map type to Japanese text query and review threshold
     const typeConfig: Record<string, { query: string; minReviews: number }> = {
         'supermarket': { query: 'スーパーマーケット', minReviews: 50 },
-        'drugstore': { query: '薬局', minReviews: 20 },
+        'drugstore': { query: 'ドラッグストア', minReviews: 20 },
         'home_goods_store': { query: 'ホームセンター', minReviews: 50 },
     };
 
