@@ -271,7 +271,7 @@ export default function SalesPage() {
             </h2>
             <div className="card mb-8" style={{ padding: '1.5rem 1rem' }}>
                 <p className="text-sm text-muted mb-4">
-                    現在地から探索して、今日が特売日に該当する周辺店舗をピックアップします。（大手チェーンのみ対応）
+                    現在地から10km以内の周辺店舗を距離が近い順に最大10件表示します。
                 </p>
 
                 <div className="flex flex-col gap-3">
