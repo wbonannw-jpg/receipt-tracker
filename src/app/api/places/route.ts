@@ -20,56 +20,106 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    // Map type to Japanese text query and review threshold
-    const typeConfig: Record<string, { query: string; minReviews: number }> = {
-        'supermarket': { query: 'スーパーマーケット', minReviews: 50 },
-        'drugstore': { query: 'ドラッグストア', minReviews: 20 },
-        'home_goods_store': { query: 'ホームセンター', minReviews: 50 },
-    };
-
-    const config = typeParam && typeConfig[typeParam]
-        ? typeConfig[typeParam]
-        : { query: 'スーパーマーケット', minReviews: 50 };
-
-    const requestBody = {
-        textQuery: config.query,
-        locationBias: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
-        maxResultCount: 20,
-        languageCode: 'ja'
-    };
-
     try {
-        const response = await fetch('https://places.googleapis.com/v1/places:searchText', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Goog-Api-Key': apiKey,
-                'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.types'
-            },
-            body: JSON.stringify(requestBody)
-        });
+        let places: any[] = [];
 
-        if (!response.ok) {
-            console.error(`Google Places API error: ${response.status}`, await response.text());
-            return NextResponse.json({ error: 'Failed to fetch places' }, { status: 502 });
-        }
-
-        const data = await response.json();
-        const places = (data.places || [])
-            .filter((place: any) => (place.userRatingCount ?? 0) >= config.minReviews)
-            .slice(0, 10)
-            .map((place: any) => ({
-                place_id: place.id,
-                name: place.displayName?.text,
-                address: place.formattedAddress,
-                location: {
-                    lat: place.location?.latitude,
-                    lng: place.location?.longitude
+        if (typeParam === 'drugstore') {
+            // --- Nearby Search API for drugstores (more reliable for chain stores) ---
+            // Uses includedTypes: ['pharmacy'] which covers all drug store chains in Japan
+            const requestBody = {
+                includedTypes: ['pharmacy'],
+                locationRestriction: {
+                    circle: {
+                        center: { latitude: parseFloat(lat), longitude: parseFloat(lng) },
+                        radius: parseFloat(radius)
+                    }
                 },
-                rating: place.rating,
-                userRatingCount: place.userRatingCount,
-                types: place.types,
-            }));
+                maxResultCount: 20,
+                languageCode: 'ja'
+            };
+
+            const response = await fetch('https://places.googleapis.com/v1/places:searchNearby', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Goog-Api-Key': apiKey,
+                    'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.types'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                console.error(`Google Places API error: ${response.status}`, await response.text());
+                return NextResponse.json({ error: 'Failed to fetch places' }, { status: 502 });
+            }
+
+            const data = await response.json();
+            places = (data.places || [])
+                .filter((place: any) => (place.userRatingCount ?? 0) >= 20)
+                .slice(0, 10)
+                .map((place: any) => ({
+                    place_id: place.id,
+                    name: place.displayName?.text,
+                    address: place.formattedAddress,
+                    location: {
+                        lat: place.location?.latitude,
+                        lng: place.location?.longitude
+                    },
+                    rating: place.rating,
+                    userRatingCount: place.userRatingCount,
+                    types: place.types,
+                }));
+
+        } else {
+            // --- Text Search API for supermarkets and home goods stores ---
+            const typeConfig: Record<string, { query: string; minReviews: number }> = {
+                'supermarket': { query: 'スーパーマーケット', minReviews: 50 },
+                'home_goods_store': { query: 'ホームセンター', minReviews: 50 },
+            };
+
+            const config = typeParam && typeConfig[typeParam]
+                ? typeConfig[typeParam]
+                : { query: 'スーパーマーケット', minReviews: 50 };
+
+            const requestBody = {
+                textQuery: config.query,
+                locationBias: { circle: { center: { latitude: parseFloat(lat), longitude: parseFloat(lng) }, radius: parseFloat(radius) } },
+                maxResultCount: 20,
+                languageCode: 'ja'
+            };
+
+            const response = await fetch('https://places.googleapis.com/v1/places:searchText', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Goog-Api-Key': apiKey,
+                    'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.types'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                console.error(`Google Places API error: ${response.status}`, await response.text());
+                return NextResponse.json({ error: 'Failed to fetch places' }, { status: 502 });
+            }
+
+            const data = await response.json();
+            places = (data.places || [])
+                .filter((place: any) => (place.userRatingCount ?? 0) >= config.minReviews)
+                .slice(0, 10)
+                .map((place: any) => ({
+                    place_id: place.id,
+                    name: place.displayName?.text,
+                    address: place.formattedAddress,
+                    location: {
+                        lat: place.location?.latitude,
+                        lng: place.location?.longitude
+                    },
+                    rating: place.rating,
+                    userRatingCount: place.userRatingCount,
+                    types: place.types,
+                }));
+        }
 
         return NextResponse.json({ results: places });
     } catch (error) {
