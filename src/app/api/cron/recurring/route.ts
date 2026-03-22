@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function POST() {
+export async function POST(req: Request) {
+    const authHeader = req.headers.get("authorization");
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const now = new Date();
         const year = now.getFullYear();

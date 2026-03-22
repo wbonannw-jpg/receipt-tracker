@@ -15,7 +15,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
         const updatedSubCategory = await prisma.subCategory.update({
-            where: { id: resolvedParams.id },
+            where: { id: resolvedParams.id, category: { userId: session.user.id } },
             data: { name }
         });
 
@@ -36,7 +36,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
     try {
         const resolvedParams = await params;
-        await prisma.subCategory.delete({ where: { id: resolvedParams.id } });
+        await prisma.subCategory.delete({ where: { id: resolvedParams.id, category: { userId: session.user.id } } });
 
         revalidatePath("/settings");
         revalidatePath("/");

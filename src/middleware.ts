@@ -29,13 +29,15 @@ try {
 
 export default async function customMiddleware(req: any, ev: any) {
     if (initError) {
-        return NextResponse.json({ error: "Middleware Init Error: " + initError.message, env: process.env.NODE_ENV }, { status: 500 });
+        console.error("Middleware Init Error:", initError);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
     try {
         // @ts-ignore
         return await middleware(req, ev);
     } catch (error: any) {
-        return NextResponse.json({ error: "Middleware Exec Error: " + error.message, stack: error.stack }, { status: 500 });
+        console.error("Middleware Exec Error:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
 

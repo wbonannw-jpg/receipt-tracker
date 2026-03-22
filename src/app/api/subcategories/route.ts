@@ -1,14 +1,26 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function POST(req: Request) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     try {
         const body = await req.json();
         const { name, categoryId } = body;
 
         if (!name || !categoryId) {
             return NextResponse.json({ error: "Name and Category ID are required" }, { status: 400 });
+        }
+
+        const category = await prisma.category.findUnique({
+            where: { id: categoryId, userId: session.user.id }
+        });
+
+        if (!category) {
+            return NextResponse.json({ error: "Category not found" }, { status: 404 });
         }
 
         const newSubCategory = await prisma.subCategory.create({

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
@@ -13,12 +13,15 @@ export const metadata: Metadata = {
   title: " Receipt Tracker - 家計簿アプリ",
   description: "AIレシート解析で簡単家計簿",
   manifest: "/manifest.json",
-  themeColor: "#16a34a",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "家計簿",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#16a34a",
 };
 
 export default function RootLayout({

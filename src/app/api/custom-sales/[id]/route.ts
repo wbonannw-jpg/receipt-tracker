@@ -8,25 +8,19 @@ export async function DELETE(
 ) {
     try {
         const session = await auth();
-        if (!session?.user?.email) {
+        if (!session?.user?.id) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
         const resolvedParams = await params;
         const id = resolvedParams.id;
 
-        // Verify ownership
         const rule = await prisma.customSaleRule.findUnique({
-            where: { id },
-            include: { user: true }
+            where: { id, userId: session.user.id }
         });
 
         if (!rule) {
             return NextResponse.json({ error: "Rule not found" }, { status: 404 });
-        }
-
-        if (rule.user.email !== session.user.email) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
         }
 
         await prisma.customSaleRule.delete({

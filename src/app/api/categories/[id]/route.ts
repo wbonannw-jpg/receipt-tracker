@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     try {
         const resolvedParams = await params;
         const body = await req.json();
@@ -13,7 +17,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         }
 
         const updatedCategory = await prisma.category.update({
-            where: { id: resolvedParams.id },
+            where: { id: resolvedParams.id, userId: session.user.id },
             data: { name },
             include: { subCategories: true }
         });
@@ -26,13 +30,27 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         if (error.code === 'P2002') {
             return NextResponse.json({ error: "同じ名前のカテゴリが既に存在します" }, { status: 400 });
         }
+        if (error.code === 'P2025') {
+            return NextResponse.json({ error: "Not found" }, { status: 404 });
+        }
         return NextResponse.json({ error: "Failed to update category" }, { status: 500 });
     }
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const session = await auth();
+    if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     try {
         const resolvedParams = await params;
+
+        const category = await prisma.category.findUnique({
+            where: { id: resolvedParams.id, userId: session.user.id }
+        });
+
+        if (!category) {
+            return NextResponse.json({ error: "Not found" }, { status: 404 });
+        }
 
         // Delete all child subcategories first to prevent foreign key constraint violations
         await prisma.subCategory.deleteMany({

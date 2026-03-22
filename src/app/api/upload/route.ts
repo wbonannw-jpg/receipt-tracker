@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
 
         // Fetch custom categories
         const categories = await prisma.category.findMany({
+            where: { userId: session.user.id },
             include: { subCategories: true }
         });
 
