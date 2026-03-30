@@ -80,6 +80,8 @@ model Receipt {
   items       Item[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId, date(sort: Desc)])
 }
 
 model Item {
@@ -92,6 +94,8 @@ model Item {
   subCategory String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([receiptId])
 }
 
 model Income {
@@ -139,6 +143,8 @@ model RecurringEntry {
   subCategory String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model RecurringHistory {
@@ -158,4 +164,5 @@ model CustomSaleRule {
   updatedAt   DateTime @updatedAt
 
   @@unique([userId, storeName, saleDay])
+  @@index([userId])
 }
